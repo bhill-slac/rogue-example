@@ -1,2 +1,2 @@
 # rogue_example
-Example projects for rogue
+Example project for rogue
