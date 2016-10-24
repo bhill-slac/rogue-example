@@ -26,6 +26,7 @@ DEF      :=
 CFLAGS   := -Wall `python2.7-config --cflags` -I$(ROGUE_DIR)/include -std=c++0x -fPIC 
 LFLAGS   := `python2.7-config --ldflags` -lboost_python -lboost_system
 LFLAGS   += -L`python2.7-config --prefix`/lib/ -l:rogue.so -L$(ROGUE_DIR)/python
+DST      := $(PWD)/python
 SHNAME   := rogue_example
 SHLIB    := rogue_example.so
 
@@ -33,7 +34,7 @@ SHLIB    := rogue_example.so
 LIB_SRC := $(PWD)/src
 LIB_CPP := $(foreach dir,$(shell find $(LIB_SRC) -type d),$(wildcard $(dir)/*.cpp))
 LIB_OBJ := $(patsubst %.cpp,%.o,$(LIB_CPP))
-LIB_SHO := $(PWD)/python/$(SHLIB)
+LIB_SHO := $(DST)/$(SHLIB)
 
 # Targets
 all: $(LIB_OBJ) $(LIB_SHO)
@@ -53,5 +54,6 @@ clean:
 
 # Compile Shared Library
 $(LIB_SHO): $(LIB_OBJ)
+	@test -d $(DST) || mkdir $(DST)
 	@echo "Creating $@"; $(CC) -shared -Wl,-soname,$(SHNAME) $(LIB_OBJ) $(LFLAGS) -o $@
 
