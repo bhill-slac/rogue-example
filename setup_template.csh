@@ -1,5 +1,6 @@
 
 # Package directories
+setenv SURF_DIR   ${PWD}/../surf
 setenv ROGUE_DIR  ${PWD}/rogue
 setenv PYDIR      /afs/slac.stanford.edu/g/lcls/package/python/python2.7.9/linux-x86_64/
 setenv ZMQ_DIR    /afs/slac.stanford.edu/g/reseng/vol11/zeromq
@@ -11,7 +12,7 @@ setenv EPICS_LIB  $EPICS_BASE/lib/linux-x86_64/
 setenv BOOST_THREAD -lboost_thread-mt
 
 # Setup python path
-setenv PYTHONPATH ${PWD}/python:${ROGUE_DIR}/python:${ZMQ_DIR}/python
+setenv PYTHONPATH ${PWD}/python:${SURF_DIR}/python:${ROGUE_DIR}/python:${ZMQ_DIR}/python
 
 # Setup path
 setenv PATH ${PYDIR}/bin:${ZMQ_DIR}/bin:${EPICS_BIN}:${PATH}

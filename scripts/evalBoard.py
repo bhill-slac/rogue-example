@@ -19,13 +19,14 @@
 # contained in the LICENSE.txt file.
 #-----------------------------------------------------------------------------
 import rogue.hardware.pgp
-import pyrogue.devices.axi_version
-import pyrogue.devices.axi_prbstx
 import pyrogue.utilities.prbs
 import pyrogue.utilities.fileio
 import pyrogue.gui
 import pyrogue.mesh
 import pyrogue.epics
+import surf
+import surf.AxiVersion
+import surf.SsiPrbsTx
 import threading
 import signal
 import atexit
@@ -122,8 +123,8 @@ mbcon = MbDebug()
 pyrogue.streamTap(pgpVc3,mbcon)
 
 # Add Devices
-evalBoard.add(pyrogue.devices.axi_version.create(name='axiVersion',memBase=srp,offset=0x0))
-evalBoard.add(pyrogue.devices.axi_prbstx.create(name='axiPrbsTx',memBase=srp,offset=0x30000))
+evalBoard.add(surf.AxiVersion.create(name='axiVersion',memBase=srp,offset=0x0))
+evalBoard.add(surf.SsiPrbsTx.create(name='ssiPrbsTx',memBase=srp,offset=0x30000))
 
 # Create mesh node
 mNode = pyrogue.mesh.MeshNode('rogueTest',iface='eth3',root=evalBoard)
