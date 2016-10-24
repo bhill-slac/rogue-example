@@ -5,9 +5,10 @@ The rogue project can be found at:
 
 https://github.com/slaclab/rogue
 
-To compile rogue from this repository:
+To checkout rogue submodule:
 
-git submodule init
-git sudmodule update
+> git submodule init
+> git sudmodule update
 
 See rogue/Readme files for rogue build instructions.
+
