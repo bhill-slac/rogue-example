@@ -24,7 +24,7 @@
 CC       := g++
 DEF      :=
 CFLAGS   := -Wall `python2.7-config --cflags` -I$(ROGUE_DIR)/include -std=c++0x -fPIC 
-LFLAGS   := `python2.7-config --ldflags` -lboost_python -lboost_system
+LFLAGS   := `python2.7-config --ldflags` $(BOOST_THREAD) -lboost_python -lboost_system
 LFLAGS   += -L`python2.7-config --prefix`/lib/ -l:rogue.so -L$(ROGUE_DIR)/python
 DST      := $(PWD)/python
 SHNAME   := rogue_example
