@@ -75,7 +75,7 @@ class MyRunControl(pyrogue.RunControl):
       while (self._runState == 'Running'):
          delay = 1.0 / ({value: key for key,value in self.runRate.enum.iteritems()}[self._runRate])
          time.sleep(delay)
-         self._root.axiPrbsTx.oneShot()
+         self._root.ssiPrbsTx.oneShot()
 
          self._runCount += 1
          if self._last != int(time.time()):
@@ -123,8 +123,8 @@ mbcon = MbDebug()
 pyrogue.streamTap(pgpVc3,mbcon)
 
 # Add Devices
-evalBoard.add(surf.AxiVersion.create(name='axiVersion',memBase=srp,offset=0x0))
-evalBoard.add(surf.SsiPrbsTx.create(name='ssiPrbsTx',memBase=srp,offset=0x30000))
+evalBoard.add(surf.AxiVersion.create(memBase=srp,offset=0x0))
+evalBoard.add(surf.SsiPrbsTx.create(memBase=srp,offset=0x30000))
 
 # Create mesh node
 mNode = pyrogue.mesh.MeshNode('rogueTest',iface='eth3',root=evalBoard)
