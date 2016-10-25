@@ -11,7 +11,7 @@ setenv EPICS_LIB  $EPICS_BASE/lib/linux-arm/
 setenv BOOST_THREAD -lboost_thread
 
 # Setup python path
-setenv PYTHONPATH ${ROGUE_DIR}/python:${SURF_DIR}/python:${ZMQ_DIR}/python
+setenv PYTHONPATH ${PWD}/python:${ROGUE_DIR}/python:${SURF_DIR}/python:${ZMQ_DIR}/python
 
 # Setup path
 setenv PATH ${ZMQ_DIR}/bin:${EPICS_BIN}:${PATH}
