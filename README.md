@@ -1,4 +1,4 @@
-# rogue_example
+# rogue-example
 Example project for rogue
 
 The rogue project can be found at:
