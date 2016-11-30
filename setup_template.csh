@@ -1,7 +1,8 @@
 
 # Package directories
 setenv SURF_DIR   ${PWD}/../surf
-setenv ROGUE_DIR  ${PWD}/rogue
+#setenv ROGUE_DIR  ${PWD}/rogue
+setenv ROGUE_DIR  ${PWD}/../rogue
 setenv PYDIR      /afs/slac.stanford.edu/g/lcls/package/python/python2.7.9/linux-x86_64/
 setenv ZMQ_DIR    /afs/slac.stanford.edu/g/reseng/vol11/zeromq
 setenv EPICS_BASE /afs/slac.stanford.edu/g/lcls/epics/R3-16-0/base/base-R3-16-0/

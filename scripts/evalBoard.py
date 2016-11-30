@@ -34,6 +34,7 @@ import yaml
 import time
 import sys
 import PyQt4.QtGui
+import testBridge
 
 # Microblaze console printout
 class MbDebug(rogue.interfaces.stream.Slave):
@@ -122,7 +123,11 @@ evalBoard.add(prbsRx)
 mbcon = MbDebug()
 pyrogue.streamTap(pgpVc3,mbcon)
 
+#br = testBridge.Bridge()
+#br._setSlave(srp)
+
 # Add Devices
+#evalBoard.add(surf.AxiVersion.create(memBase=br,offset=0x0))
 evalBoard.add(surf.AxiVersion.create(memBase=srp,offset=0x0))
 evalBoard.add(surf.SsiPrbsTx.create(memBase=srp,offset=0x30000))
 
