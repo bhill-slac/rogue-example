@@ -26,7 +26,7 @@ import time
 prbsA = rogue.utilities.Prbs()
 prbsB = rogue.utilities.Prbs()
 
-sim = pyrogue.simulation.StreamSim('localhost',20,True)
+sim = pyrogue.simulation.StreamSim('localhost',20,1,True)
 
 pyrogue.streamConnect(prbsA,sim)
 pyrogue.streamConnect(sim,prbsB)
