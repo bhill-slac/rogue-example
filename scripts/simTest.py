@@ -26,7 +26,7 @@ import time
 prbsA = rogue.utilities.Prbs()
 prbsB = rogue.utilities.Prbs()
 
-sim = pyrogue.simulation.StreamSim('localhost',1,True)
+sim = pyrogue.simulation.StreamSim('localhost',20,True)
 
 pyrogue.streamConnect(prbsA,sim)
 pyrogue.streamConnect(sim,prbsB)
@@ -40,6 +40,8 @@ while (True):
    print(" Received: Count %i, Bytes %i, Errors %i" % (prbsB.getRxCount(),prbsB.getRxBytes(),prbsB.getRxErrors()))
    print("  Gateway: TxCount %i, RxCount %i" % (sim.txCount,sim.rxCount))
    #prbsA.genFrame(100)
+   sim.sendOpCode(0xaa)
+   sim.setData(0x7f)
    time.sleep(1)
 
 
