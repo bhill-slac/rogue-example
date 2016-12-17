@@ -19,14 +19,13 @@ class Bridge(rogue.interfaces.memory.Master,rogue.interfaces.memory.Slave):
       """ Respond to min access request by forwarding to downstream slave"""
       return(self._reqMinAccess())
 
-   def _doTransaction(self,tid,master,address,size,write,posted):
+   def _doTransaction(self,tid,master,address,size,type):
       """ Incoming transaction request"""
-      #print("Got do transaction. id=%i, address=%x, write=%i, size=%i" % (tid,address,write,size))
       self.done = False
       ba = bytearray(size)
 
       # Write request
-      if write:
+      if type == rogue.interfaces.memory.Write or type == rogue.interfaces.memory.Post:
 
          # First get data from incoming master
          # Data will be put in local byte array
@@ -34,7 +33,7 @@ class Bridge(rogue.interfaces.memory.Master,rogue.interfaces.memory.Slave):
 
          # Request write transaction to downstream slave
          # Downstream slave will pull data from local byte array
-         self._reqTransaction(address,ba,write,posted)
+         self._reqTransaction(address,ba,write,type)
 
          # Wait for downstream write request to complete. 
          # Indicated by doneTransaction called from downstream.
@@ -51,7 +50,7 @@ class Bridge(rogue.interfaces.memory.Master,rogue.interfaces.memory.Slave):
       else:
          # Request read transaction to downstream slave
          # Data will be put in local byte array
-         self._reqTransaction(address,ba,write,posted)
+         self._reqTransaction(address,ba,type)
 
          # Wait for downstream read request to complete. 
          # Indicated by doneTransaction called from downstream.
