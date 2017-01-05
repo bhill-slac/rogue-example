@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #-----------------------------------------------------------------------------
 # Title      : Eval board instance
 #-----------------------------------------------------------------------------
@@ -21,7 +21,6 @@
 import rogue.hardware.pgp
 import pyrogue.utilities.prbs
 import pyrogue.utilities.fileio
-import pyrogue.gui
 import pyrogue.mesh
 import pyrogue.epics
 import surf
@@ -33,7 +32,6 @@ import atexit
 import yaml
 import time
 import sys
-import PyQt4.QtGui
 import testBridge
 
 # Microblaze console printout
