@@ -22,22 +22,41 @@ import atexit
 import time
 import sys
 import pyrogue
+import pyrogue.protocols
+import rogue.protocols.srp
 import rogue.protocols.udp
-import rogue.protocols.rssi
+import surf
+import surf.AxiVersion
+import pyrogue.mesh
 
-# UDP
-udp = rogue.protocols.udp.Client("192.168.2.126",8192,1500)
+link = pyrogue.protocols.UdpRssiPack("192.168.2.126",8192,1500)
+#link = rogue.protocols.udp.Client("192.168.2.126",8193,1500)
 
-# RSSI
-rssi = rogue.protocols.rssi.Core(1500)
+evalBoard = pyrogue.Root('evalBoard','Evaluation Board')
 
-# Attached RSSI transport to UDP
-pyrogue.streamConnectBiDir(rssi.transport(),udp)
+srp = rogue.protocols.srp.SrpV0()
+pyrogue.streamConnectBiDir(srp,link.application(0))
+#pyrogue.streamConnectBiDir(srp,link)
+
+evalBoard.add(surf.AxiVersion.create(memBase=srp,offset=0x0))
+
+# Create mesh node
+mNode = pyrogue.mesh.MeshNode('rogueTest',iface='eth3',root=evalBoard)
+mNode.start()
 
 # Close window and stop polling
 def stop():
+    mNode.stop()
+    evalBoard.stop()
     exit()
 
 # Start with ipython -i scripts/evalBoard.py
-print("Ready")
+print("Started")
+
+while(True):
+    time.sleep(1)
+    print("Link State: RSSIOpen=%i, DownCount=%i, RssiDropCount=%i, RssiReTrans=%i, PackDropCount=%i" 
+          %
+          (link.getRssiOpen(),link.getRssiDownCount(),link.getRssiDropCount(),
+           link.getRssiRetranCount(),link.getPackDropCount()))
 
