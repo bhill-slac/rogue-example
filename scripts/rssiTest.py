@@ -38,13 +38,15 @@ class DataRx(rogue.interfaces.stream.Slave):
       rogue.interfaces.stream.Slave.__init__(self)
       self.b = 0
       self.c = 0
+      self.s = 0
 
    def _acceptFrame(self,frame):
+      self.s = frame.getPayload()
       self.c += 1
-      self.b += frame.getPayload()
+      self.b += self.s
 
    def getCount(self):
-      return self.c,self.b
+      return self.c,self.b,self.s
 
 
 udpRssiA = pyrogue.protocols.UdpRssiPack("192.168.2.187",8193,1500)
@@ -84,9 +86,9 @@ while(True):
     print("Link State: RSSIOpen=%i, RSSIBusy=%i, DownCount=%i, RssiDropCount=%i, RssiReTrans=%i, PackDropCount=%i" 
           % (udpRssiB.getRssiOpen(),udpRssiB.getRssiBusy(),udpRssiB.getRssiDownCount(),udpRssiB.getRssiDropCount(),
            udpRssiB.getRssiRetranCount(),udpRssiB.getPackDropCount()))
-    c,b = testRx.getCount()
+    c,b,s = testRx.getCount()
     w = ((b-l)*8.0) / 1e9
     l = b
-    print("Rx Count = %i, Rx Bytes = %i, BW = %f" % (c,b,w))
+    print("Rx Count = %i, Rx Bytes = %i, Size = %i, BW = %f" % (c,b,s,w))
 
 
