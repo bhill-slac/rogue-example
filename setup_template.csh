@@ -17,6 +17,3 @@ setenv ROGUE_DIR  ${PWD}/../rogue
 # Setup python path
 setenv PYTHONPATH ${PWD}/python:${SURF_DIR}/python:${ROGUE_DIR}/python:${PYTHONPATH}
 
-# Setup library path
-setenv LD_LIBRARY_PATH ${ROGUE_DIR}/python::${LD_LIBRARY_PATH}
-
