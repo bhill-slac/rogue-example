@@ -29,38 +29,26 @@ import surf
 import surf.AxiVersion
 import surf.SsiPrbsTx
 import pyrogue.mesh
+import pyrogue.epics
 import pyrogue.utilities.prbs
-
-
-class DataRx(rogue.interfaces.stream.Slave):
-
-   def __init__(self):
-      rogue.interfaces.stream.Slave.__init__(self)
-      self.b = 0
-      self.c = 0
-      self.s = 0
-
-   def _acceptFrame(self,frame):
-      self.s = frame.getPayload()
-      self.c += 1
-      self.b += self.s
-
-   def getCount(self):
-      return self.c,self.b,self.s
+import rogue_example
 
 
 udpRssiA = pyrogue.protocols.UdpRssiPack("192.168.2.187",8193,1500)
 rssiSrp = rogue.protocols.srp.SrpV3()
 pyrogue.streamConnectBiDir(rssiSrp,udpRssiA.application(0))
 
-udpRssiB = pyrogue.protocols.UdpRssiPack("192.168.2.187",8194,1500)
+#udpRssiB = pyrogue.protocols.UdpRssiPack("192.168.2.187",8194,1500)
 #prbsRx = pyrogue.utilities.prbs.PrbsRx('prbsRx')
 #pyrogue.streamConnect(udpRssiB.application(1),prbsRx)
 
-testRx = DataRx()
-pyrogue.streamConnect(udpRssiB.application(1),testRx)
+#testRx = DataRx()
+#pyrogue.streamConnect(udpRssiB.application(1),testRx)
 
-evalBoard = pyrogue.Root('evalBoard','Evaluation Board')
+#sink = rogue_example.StreamSink()
+#pyrogue.streamConnect(udpRssiB.application(1),sink)
+
+evalBoard = pyrogue.Root('rssiBoard','Evaluation Board')
 #evalBoard.add(prbsRx)
 
 evalBoard.add(surf.AxiVersion.create(memBase=rssiSrp,offset=0x00000000))
@@ -68,27 +56,38 @@ evalBoard.add(surf.SsiPrbsTx.create(memBase=rssiSrp,offset=0x0A030000))
 evalBoard.add(surf.Rssi(memBase=rssiSrp,offset=0x0A050000))
 
 # Create mesh node
-mNode = pyrogue.mesh.MeshNode('rogueTest',iface='eth3',root=evalBoard)
+mNode = pyrogue.mesh.MeshNode('rssiTest',iface='eth3',root=evalBoard)
 mNode.start()
+
+epics = pyrogue.epics.EpicsCaServer('rssiTest',evalBoard)
+epics.start()
 
 # Close window and stop polling
 def stop():
     mNode.stop()
+    epics.stop()
     evalBoard.stop()
     exit()
 
 # Start with ipython -i scripts/evalBoard.py
 print("Started")
 
-l = 0
+#st = 0
+#lc = 0
+#base = 0
 while(True):
     time.sleep(1)
-    print("Link State: RSSIOpen=%i, RSSIBusy=%i, DownCount=%i, RssiDropCount=%i, RssiReTrans=%i, PackDropCount=%i" 
-          % (udpRssiB.getRssiOpen(),udpRssiB.getRssiBusy(),udpRssiB.getRssiDownCount(),udpRssiB.getRssiDropCount(),
-           udpRssiB.getRssiRetranCount(),udpRssiB.getPackDropCount()))
-    c,b,s = testRx.getCount()
-    w = ((b-l)*8.0) / 1e9
-    l = b
-    print("Rx Count = %i, Rx Bytes = %i, Size = %i, BW = %f" % (c,b,s,w))
+#    print("Link State: RSSIOpen=%i, RSSIBusy=%i, DownCount=%i, RssiDropCount=%i, RssiReTrans=%i, PackDropCount=%i" 
+#          % (udpRssiB.getRssiOpen(),udpRssiB.getRssiBusy(),udpRssiB.getRssiDownCount(),udpRssiB.getRssiDropCount(),
+#           udpRssiB.getRssiRetranCount(),udpRssiB.getPackDropCount()))
 
+#    count = sink.getRxCount()
+#    total = sink.getRxBytes()
+
+#    if (count - lc) > 100:
+#        w = ((total-base)*8.0) / ((time.time() - st) * 1.0e9)
+#        print("Rx Count = %i, Rx Bytes = %i, BW = %f" % (count,total,w))
+#        st = time.time()
+#        base = total
+#        lc = count
 
