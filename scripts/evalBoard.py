@@ -18,7 +18,6 @@
 # copied, modified, propagated, or distributed except according to the terms 
 # contained in the LICENSE.txt file.
 #-----------------------------------------------------------------------------
-import rogue.hardware.pgp
 import pyrogue.utilities.prbs
 import pyrogue.utilities.fileio
 import pyrogue.mesh
@@ -134,13 +133,13 @@ mNode = pyrogue.mesh.MeshNode('rogueTest',iface='eth3',root=evalBoard)
 mNode.start()
 
 # Create epics node
-#epics = pyrogue.epics.EpicsCaServer('rogueTest',evalBoard)
-#epics.start()
+epics = pyrogue.epics.EpicsCaServer('rogueTest',evalBoard)
+epics.start()
 
 # Close window and stop polling
 def stop():
     mNode.stop()
-    #epics.stop()
+    epics.stop()
     evalBoard.stop()
     exit()
 
