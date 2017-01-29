@@ -21,10 +21,28 @@
 import pyrogue.mesh
 import pyrogue.gui
 import PyQt4.QtGui
+import getopt
 import sys
 
 group = 'rogueTest'
 iface = 'eth3'
+
+try:
+    opts, args = getopt.getopt(sys.argv[1:],"hi:g:")
+except getopt.GetoptError:
+    print('guiClient.py -i <interface> -g <group>')
+    sys.exit(2)
+
+for opt, arg in opts:
+    if opt == '-h':
+        print('test.py -i <inputfile> -o <outputfile>')
+        sys.exit()
+    elif opt in ("-i"):
+        iface = arg
+    elif opt in ("-g"):
+        group = arg
+
+print("Using interface {} for group {}".format(iface,group))
 
 # Create mesh node
 node = pyrogue.mesh.MeshNode(group,iface=iface)
@@ -41,5 +59,6 @@ node.start()
 appTop.exec_()
 
 # Stop mesh after gui exits
+print("Waiting on node")
 node.stop()
 
