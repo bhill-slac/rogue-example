@@ -31,8 +31,9 @@ import surf.SsiPrbsTx
 import pyrogue.mesh
 import pyrogue.epics
 import pyrogue.utilities.prbs
-import rogue_example
+import logging
 
+#logging.getLogger('pyrogue.Block').setLevel(logging.DEBUG)
 
 udpRssiA = pyrogue.protocols.UdpRssiPack("192.168.2.187",8193,1500)
 rssiSrp = rogue.protocols.srp.SrpV3()

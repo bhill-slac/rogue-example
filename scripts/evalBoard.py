@@ -20,6 +20,7 @@
 #-----------------------------------------------------------------------------
 import pyrogue.utilities.prbs
 import pyrogue.utilities.fileio
+import rogue.interfaces.stream
 import pyrogue.mesh
 import pyrogue.epics
 import surf

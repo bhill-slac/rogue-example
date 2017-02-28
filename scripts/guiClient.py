@@ -23,9 +23,10 @@ import pyrogue.gui
 import PyQt4.QtGui
 import getopt
 import sys
+import logging
 
 group = 'rogueTest'
-iface = 'eth3'
+iface = None
 
 try:
     opts, args = getopt.getopt(sys.argv[1:],"hi:g:")
@@ -43,6 +44,9 @@ for opt, arg in opts:
         group = arg
 
 print("Using interface {} for group {}".format(iface,group))
+
+#logger = logging.getLogger("pyre")
+#logger.setLevel(logging.DEBUG)
 
 # Create mesh node
 node = pyrogue.mesh.MeshNode(group,iface=iface)
