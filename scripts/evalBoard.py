@@ -33,6 +33,9 @@ import yaml
 import time
 import sys
 import testBridge
+import logging
+
+logging.getLogger("pyrogue.EpicsCaServer").setLevel(logging.INFO)
 
 # Microblaze console printout
 class MbDebug(rogue.interfaces.stream.Slave):
