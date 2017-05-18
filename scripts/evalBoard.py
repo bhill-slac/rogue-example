@@ -54,13 +54,11 @@ class MyRunControl(pyrogue.RunControl):
       pyrogue.RunControl.__init__(self,name,'Run Controller')
       self._thread = None
 
-      self.runRate.enum = {1:'1 Hz', 10:'10 Hz', 30:'30 Hz'}
+      self.runRate.updateEnum({1:'1 Hz', 10:'10 Hz', 30:'30 Hz'})
 
-   def _setRunState(self,dev,var,value):
-      if self._runState != value:
-         self._runState = value
-
-         if self._runState == 'Running':
+   def _setRunState(self,dev,var,value,changed):
+      if changed:
+         if self.runState.get(read=False) == 'Running':
             self._thread = threading.Thread(target=self._run)
             self._thread.start()
          else:
@@ -68,10 +66,13 @@ class MyRunControl(pyrogue.RunControl):
             self._thread = None
 
    def _run(self):
-      self._runCount = 0
+      self.runCount.set(0)
       self._last = int(time.time())
 
-      while (self._runState == 'Running'):
+      while (self.runState.get(read=False) == 'Running'):
+
+
+
          delay = 1.0 / ({value: key for key,value in self.runRate.enum.items()}[self._runRate])
          time.sleep(delay)
          self._root.ssiPrbsTx.oneShot()

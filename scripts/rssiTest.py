@@ -33,7 +33,7 @@ import pyrogue.epics
 import pyrogue.utilities.prbs
 import logging
 
-#logging.getLogger('pyrogue.Block').setLevel(logging.DEBUG)
+logging.getLogger('pyrogue').setLevel(logging.DEBUG)
 
 udpRssiA = pyrogue.protocols.UdpRssiPack("192.168.2.187",8193,1500)
 rssiSrp = rogue.protocols.srp.SrpV3()

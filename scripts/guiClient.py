@@ -26,7 +26,7 @@ import sys
 import logging
 
 group = 'rogueTest'
-iface = None
+iface = 'eth3'
 
 try:
     opts, args = getopt.getopt(sys.argv[1:],"hi:g:")
