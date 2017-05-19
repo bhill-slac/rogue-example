@@ -35,7 +35,8 @@ import sys
 import testBridge
 import logging
 
-logging.getLogger("pyrogue.EpicsCaServer").setLevel(logging.INFO)
+#logging.getLogger("pyrogue.EpicsCaServer").setLevel(logging.INFO)
+#logging.getLogger("pyrogue.MemoryBlock").setLevel(logging.DEBUG)
 
 # Microblaze console printout
 class MbDebug(rogue.interfaces.stream.Slave):
@@ -54,10 +55,9 @@ class MbDebug(rogue.interfaces.stream.Slave):
 # Custom run control
 class MyRunControl(pyrogue.RunControl):
    def __init__(self,name):
-      pyrogue.RunControl.__init__(self,name,'Run Controller')
+      pyrogue.RunControl.__init__(self,name=name,description='Run Controller',
+                                  rates={1:'1 Hz', 10:'10 Hz', 30:'30 Hz'})
       self._thread = None
-
-      self.runRate.updateEnum({1:'1 Hz', 10:'10 Hz', 30:'30 Hz'})
 
    def _setRunState(self,dev,var,value,changed):
       if changed:
