@@ -23,13 +23,14 @@ import PyQt4.QtGui
 import sys
 import pyrogue.gui
 
-evalBoard = Pyro4.Proxy("PYRONAME:evalBoard")
+blah = Pyro4.Proxy("PYRONAME:blah")
 
-print("Type   = {}".format(type(evalBoard)))
+print("Type   = {}".format(type(blah)))
 #print("Test   = {}".format(evalBoard.test))
 #print("Name   = {}".format(evalBoard.name))
-node = evalBoard.getNode('enable')
-print("Type={}".format(type(node)))
+#node = evalBoard.getNode()
+#node = evalBoard.root
+#print("Type={}".format(type(node)))
 
 #appTop = PyQt4.QtGui.QApplication(sys.argv)
 #guiTop = pyrogue.gui.GuiTop('rogueTest')

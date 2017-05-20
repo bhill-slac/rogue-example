@@ -23,9 +23,8 @@ import pyrogue.utilities.fileio
 import rogue.interfaces.stream
 import pyrogue.mesh
 import pyrogue.epics
-import surf
-import surf.AxiVersion
-import surf.SsiPrbsTx
+import surf.axi
+import surf.protocols.ssi
 import threading
 import signal
 import atexit
@@ -130,8 +129,8 @@ pyrogue.streamTap(pgpVc3,mbcon)
 
 # Add Devices
 #evalBoard.add(surf.AxiVersion.create(memBase=br,offset=0x0))
-evalBoard.add(surf.AxiVersion.create(memBase=srp,offset=0x0))
-evalBoard.add(surf.SsiPrbsTx.create(memBase=srp,offset=0x30000))
+evalBoard.add(surf.axi.AxiVersion(memBase=srp,offset=0x0))
+evalBoard.add(surf.protocols.ssi.SsiPrbsTx(memBase=srp,offset=0x30000))
 
 # Create mesh node
 mNode = pyrogue.mesh.MeshNode('rogueTest',iface='eth3',root=evalBoard)
