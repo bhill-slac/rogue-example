@@ -33,6 +33,7 @@ import time
 import sys
 import testBridge
 import logging
+import datetime
 
 #logging.getLogger("pyrogue.EpicsCaServer").setLevel(logging.INFO)
 #logging.getLogger("pyrogue.MemoryBlock").setLevel(logging.DEBUG)
@@ -130,7 +131,7 @@ pyrogue.streamTap(pgpVc3,mbcon)
 # Add Devices
 #evalBoard.add(surf.AxiVersion.create(memBase=br,offset=0x0))
 evalBoard.add(surf.axi.AxiVersion(memBase=srp,offset=0x0))
-evalBoard.add(surf.protocols.ssi.SsiPrbsTx(memBase=srp,offset=0x30000))
+#evalBoard.add(surf.protocols.ssi.SsiPrbsTx(memBase=srp,offset=0x30000))
 
 # Create mesh node
 mNode = pyrogue.mesh.MeshNode('rogueTest',iface='eth3',root=evalBoard)
@@ -147,6 +148,17 @@ def stop():
     evalBoard.stop()
     exit()
 
-# Start with ipython -i scripts/evalBoard.py
-print("Started rogue mesh and epics V3 server. To exit type stop()")
-
+#cnt = 0
+#lcnt = 0
+#ltime = int(time.clock())
+#
+#while True:
+#    evalBoard.AxiVersion.UpTimeCnt.get()
+#    cnt+=1
+#
+#    ctime = int(time.clock())
+#    if ltime != ctime:
+#        ltime = ctime
+#        print("Did {} transactions".format(cnt-lcnt))
+#        lcnt = cnt
+#

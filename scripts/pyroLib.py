@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 #-----------------------------------------------------------------------------
-# Title      : GUI Client
+# Title      : Eval board instance
 #-----------------------------------------------------------------------------
-# File       : guiClient.py
+# File       : evalBoard.py
 # Author     : Ryan Herbst, rherbst@slac.stanford.edu
 # Created    : 2016-09-29
 # Last update: 2016-09-29
 #-----------------------------------------------------------------------------
 # Description:
-# Generic GUI client for rogue
+# Rogue interface to eval board
 #-----------------------------------------------------------------------------
 # This file is part of the rogue_example software. It is subject to 
 # the license terms in the LICENSE.txt file found in the top-level directory 
@@ -18,40 +18,31 @@
 # copied, modified, propagated, or distributed except according to the terms 
 # contained in the LICENSE.txt file.
 #-----------------------------------------------------------------------------
-import Pyro4
-import PyQt4.QtGui
-import sys
-import pyrogue.gui
-
-import pyroLib
-import threading
+import pyrogue.utilities.prbs
+import pyrogue.utilities.fileio
+import rogue.interfaces.stream
+import pyrogue.mesh
+import pyrogue.epics
 import surf.axi
-import collections
+import surf.protocols.ssi
+import threading
+import signal
+import atexit
+import yaml
+import time
+import sys
+import testBridge
+import logging
+import Pyro4
 
-cb = pyroLib.CbClass()
+#Pyro4.config.REQUIRE_EXPOSE = False
 
-#with Pyro4.core.Daemon() as daemon:
-#    cb = pyroLib.CbClass()
-#    daemon.register(cb)
-#
-#    evalBoard = Pyro4.Proxy("PYRONAME:evalBoard")
-#    evalBoard.addVarListener(cb.rootCb)
-#
-#    daemon.requestLoop()
+@Pyro4.expose
+class CbClass(object):
 
-def recreate_OrderedDict(name, values):
-    return collections.OrderedDict(values['items'])
+    def varListener(self, dev, var, value):
+        print("Got {}".format(value))
 
-Pyro4.util.SerializerBase.register_dict_to_class("collections.OrderedDict", recreate_OrderedDict)
-daemon = Pyro4.Daemon()
-
-def server():
-    daemon.requestLoop()
-
-t1 = threading.Thread(target=server)
-t1.start()
-
-evalBoard = pyrogue.PyroRoot(Pyro4.Proxy("PYRONAME:evalBoard"),daemon)
-evalBoard.addInstance(cb)
-evalBoard.AxiVersion.UpTimeCnt.addListener(cb)
+    def rootListener(self, yml, lst):
+        print("Got {}".format(yml))
 

@@ -43,6 +43,8 @@ def recreate_OrderedDict(name, values):
     return collections.OrderedDict(values['items'])
 
 Pyro4.util.SerializerBase.register_dict_to_class("collections.OrderedDict", recreate_OrderedDict)
+
+Pyro4.util.SerializerBase.register_dict_to_class("collections.OrderedDict", recreate_OrderedDict)
 daemon = Pyro4.Daemon()
 
 def server():
@@ -52,6 +54,17 @@ t1 = threading.Thread(target=server)
 t1.start()
 
 evalBoard = pyrogue.PyroRoot(Pyro4.Proxy("PYRONAME:evalBoard"),daemon)
-evalBoard.addInstance(cb)
-evalBoard.AxiVersion.UpTimeCnt.addListener(cb)
+#enable    = Pyro4.Proxy("PYRONAME:enable")
+#UpTimeCnt = Pyro4.Proxy("PYRONAME:UpTimeCnt")
+
+#UpTimeCnt.addListener(tst)
+#evalBoard.addVarListener(tstA)
+
+# Create GUI
+appTop = PyQt4.QtGui.QApplication(sys.argv)
+guiTop = pyrogue.gui.GuiTop('rogueTest')
+guiTop.addTree(evalBoard)
+
+# Run gui
+appTop.exec_()
 

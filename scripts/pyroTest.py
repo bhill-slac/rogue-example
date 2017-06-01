@@ -34,23 +34,121 @@ import sys
 import testBridge
 import logging
 import Pyro4
+import pyroLib
+import collections
+
+# Custom run control
+class MyRunControl(pyrogue.RunControl):
+   def __init__(self,name):
+      pyrogue.RunControl.__init__(self,name=name,description='Run Controller',
+                                  rates={1:'1 Hz', 10:'10 Hz', 30:'30 Hz'})
+      self._thread = None
+
+   def _setRunState(self,dev,var,value,changed):
+      if changed:
+         if self.runState.get(read=False) == 'Running':
+            self._thread = threading.Thread(target=self._run)
+            self._thread.start()
+         else:
+            self._thread.join()
+            self._thread = None
+
+   def _run(self):
+      self.runCount.set(0)
+      self._last = int(time.time())
+
+      while (self.runState.get(read=False) == 'Running'):
+         delay = 1.0 / ({value: key for key,value in self.runRate.enum.items()}[self._runRate])
+         time.sleep(delay)
+         self._root.ssiPrbsTx.oneShot()
+
+         self._runCount += 1
+         if self._last != int(time.time()):
+             self._last = int(time.time())
+             self.runCount._updated()
+
+# Set base
+evalBoard = pyrogue.Root('evalBoard','Evaluation Board')
+
+# Run control
+evalBoard.add(MyRunControl('runControl'))
+
+# File writer
+dataWriter = pyrogue.utilities.fileio.StreamWriter('dataWriter')
+evalBoard.add(dataWriter)
+
+# Create the PGP interfaces
+pgpVc0 = rogue.hardware.pgp.PgpCard('/dev/pgpcard_0',0,0) # Registers
+pgpVc1 = rogue.hardware.pgp.PgpCard('/dev/pgpcard_0',0,1) # Data
+pgpVc3 = rogue.hardware.pgp.PgpCard('/dev/pgpcard_0',0,3) # Microblaze
+
+print("")
+print("PGP Card Version: %x" % (pgpVc0.getInfo().version))
+
+# Create and Connect SRP to VC0
+srp = rogue.protocols.srp.SrpV0()
+pyrogue.streamConnectBiDir(pgpVc0,srp)
+
+# Add configuration stream to file as channel 0
+pyrogue.streamConnect(evalBoard,dataWriter.getChannel(0x0))
+
+# Add data stream to file as channel 1
+pyrogue.streamConnect(pgpVc1,dataWriter.getChannel(0x1))
+
+## Add microblaze console stream to file as channel 2
+pyrogue.streamConnect(pgpVc3,dataWriter.getChannel(0x2))
+
+# PRBS Receiver as secdonary receiver for VC1
+prbsRx = pyrogue.utilities.prbs.PrbsRx('prbsRx')
+pyrogue.streamTap(pgpVc1,prbsRx)
+evalBoard.add(prbsRx)
+
+# Add Devices
+evalBoard.add(surf.axi.AxiVersion(memBase=srp,offset=0x0))
+#evalBoard.add(surf.protocols.ssi.SsiPrbsTx(memBase=srp,offset=0x30000))
+
+# Create mesh node
+#mNode = pyrogue.mesh.MeshNode('rogueTest',iface='eth3',root=evalBoard)
+#mNode.start()
+
+# Close window and stop polling
+def stop():
+    mNode.stop()
+    epics.stop()
+    evalBoard.stop()
+    exit()
 
 #Pyro4.config.REQUIRE_EXPOSE = False
 
-import pyroLib
+def recreate_OrderedDict(name, values):
+    return collections.OrderedDict(values['items'])
 
-blah = pyroLib.TestB()
+Pyro4.util.SerializerBase.register_dict_to_class("collections.OrderedDict", recreate_OrderedDict)
 
-#daemon = Pyro4.Daemon()
-#ns = Pyro4.locateNS()
-#uri = daemon.register(evalBoard)
-#ns.register('rogueTest',uri)
-#daemon.requestLoop()
-Pyro4.Daemon.serveSimple ( 
-    {
-        pyroLib.TestA: None,
-        pyroLib.TestB: None,
-        blah:  'blah'
-    }, ns = True
-)
+lst = []
+evalBoard._getNodeList(lst)
+exp = {evalBoard: 'evalBoard'}
+for i in lst:
+    exp[i]= None
+
+print("exporting {}".format(exp))
+
+Pyro4.Daemon.serveSimple ( exp, ns = True )
+#    {
+#        #pyrogue.LocalVariable:  None,
+#        #pyrogue.RemoteVariable: None,
+#        #pyrogue.LinkVariable:   None,
+#        #evalBoard:                      'evalBoard',
+#        #evalBoard.enable:               'enable',
+#        #evalBoard.AxiVersion.UpTimeCnt: 'UpTimeCnt'
+#        evalBoard:                      'evalBoard',
+#        evalBoard.runControl:           None,
+#        evalBoard.dataWriter:           None,
+#        evalBoard.prbsRx:               None,
+#        evalBoard.enable:               None,
+#        evalBoard.AxiVersion:           None,
+#        evalBoard.AxiVersion.UpTimeCnt: None
+#
+#    }, ns = True
+#)
 
