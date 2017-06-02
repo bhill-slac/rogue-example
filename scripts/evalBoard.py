@@ -21,7 +21,6 @@
 import pyrogue.utilities.prbs
 import pyrogue.utilities.fileio
 import rogue.interfaces.stream
-import pyrogue.mesh
 import pyrogue.epics
 import surf.axi
 import surf.protocols.ssi
@@ -125,17 +124,12 @@ evalBoard.add(prbsRx)
 mbcon = MbDebug()
 pyrogue.streamTap(pgpVc3,mbcon)
 
-#br = testBridge.Bridge()
-#br._setSlave(srp)
-
 # Add Devices
-#evalBoard.add(surf.AxiVersion.create(memBase=br,offset=0x0))
 evalBoard.add(surf.axi.AxiVersion(memBase=srp,offset=0x0))
-#evalBoard.add(surf.protocols.ssi.SsiPrbsTx(memBase=srp,offset=0x30000))
+evalBoard.add(surf.protocols.ssi.SsiPrbsTx(memBase=srp,offset=0x30000))
 
-# Create mesh node
-mNode = pyrogue.mesh.MeshNode('rogueTest',iface='eth3',root=evalBoard)
-mNode.start()
+# Export remote objects
+evalBoard.exportRoot('rogueTest')
 
 # Create epics node
 epics = pyrogue.epics.EpicsCaServer('rogueTest',evalBoard)
@@ -143,22 +137,7 @@ epics.start()
 
 # Close window and stop polling
 def stop():
-    mNode.stop()
     epics.stop()
     evalBoard.stop()
     exit()
 
-#cnt = 0
-#lcnt = 0
-#ltime = int(time.clock())
-#
-#while True:
-#    evalBoard.AxiVersion.UpTimeCnt.get()
-#    cnt+=1
-#
-#    ctime = int(time.clock())
-#    if ltime != ctime:
-#        ltime = ctime
-#        print("Did {} transactions".format(cnt-lcnt))
-#        lcnt = cnt
-#
