@@ -21,11 +21,9 @@
 import pyrogue.utilities.prbs
 import pyrogue.utilities.fileio
 import rogue.interfaces.stream
-import pyrogue.mesh
 import pyrogue.epics
-import surf
-import surf.AxiVersion
-import surf.SsiPrbsTx
+import surf.axi
+import surf.protocols.ssi
 import threading
 import signal
 import atexit
@@ -33,6 +31,11 @@ import yaml
 import time
 import sys
 import testBridge
+import logging
+import datetime
+
+#logging.getLogger("pyrogue.EpicsCaServer").setLevel(logging.INFO)
+#logging.getLogger("pyrogue.MemoryBlock").setLevel(logging.DEBUG)
 
 # Microblaze console printout
 class MbDebug(rogue.interfaces.stream.Slave):
@@ -51,16 +54,13 @@ class MbDebug(rogue.interfaces.stream.Slave):
 # Custom run control
 class MyRunControl(pyrogue.RunControl):
    def __init__(self,name):
-      pyrogue.RunControl.__init__(self,name,'Run Controller')
+      pyrogue.RunControl.__init__(self,name=name,description='Run Controller',
+                                  rates={1:'1 Hz', 10:'10 Hz', 30:'30 Hz'})
       self._thread = None
 
-      self.runRate.enum = {1:'1 Hz', 10:'10 Hz', 30:'30 Hz'}
-
-   def _setRunState(self,dev,var,value):
-      if self._runState != value:
-         self._runState = value
-
-         if self._runState == 'Running':
+   def _setRunState(self,dev,var,value,changed):
+      if changed:
+         if self.runState.get(read=False) == 'Running':
             self._thread = threading.Thread(target=self._run)
             self._thread.start()
          else:
@@ -68,10 +68,13 @@ class MyRunControl(pyrogue.RunControl):
             self._thread = None
 
    def _run(self):
-      self._runCount = 0
+      self.runCount.set(0)
       self._last = int(time.time())
 
-      while (self._runState == 'Running'):
+      while (self.runState.get(read=False) == 'Running'):
+
+
+
          delay = 1.0 / ({value: key for key,value in self.runRate.enum.items()}[self._runRate])
          time.sleep(delay)
          self._root.ssiPrbsTx.oneShot()
@@ -121,17 +124,12 @@ evalBoard.add(prbsRx)
 mbcon = MbDebug()
 pyrogue.streamTap(pgpVc3,mbcon)
 
-#br = testBridge.Bridge()
-#br._setSlave(srp)
-
 # Add Devices
-#evalBoard.add(surf.AxiVersion.create(memBase=br,offset=0x0))
-evalBoard.add(surf.AxiVersion.create(memBase=srp,offset=0x0))
-evalBoard.add(surf.SsiPrbsTx.create(memBase=srp,offset=0x30000))
+evalBoard.add(surf.axi.AxiVersion(memBase=srp,offset=0x0))
+evalBoard.add(surf.protocols.ssi.SsiPrbsTx(memBase=srp,offset=0x30000))
 
-# Create mesh node
-mNode = pyrogue.mesh.MeshNode('rogueTest',iface='eth3',root=evalBoard)
-mNode.start()
+# Export remote objects
+evalBoard.exportRoot('rogueTest')
 
 # Create epics node
 epics = pyrogue.epics.EpicsCaServer('rogueTest',evalBoard)
@@ -139,11 +137,7 @@ epics.start()
 
 # Close window and stop polling
 def stop():
-    mNode.stop()
     epics.stop()
     evalBoard.stop()
     exit()
-
-# Start with ipython -i scripts/evalBoard.py
-print("Started rogue mesh and epics V3 server. To exit type stop()")
 

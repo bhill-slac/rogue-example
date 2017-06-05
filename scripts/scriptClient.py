@@ -18,26 +18,16 @@
 # copied, modified, propagated, or distributed except according to the terms 
 # contained in the LICENSE.txt file.
 #-----------------------------------------------------------------------------
-import pyrogue.mesh
 import pyrogue.gui
-import PyQt4.QtGui
 import sys
 
 group = 'rogueTest'
-iface = 'eth3'
+iface = '127.0.0.1'
 
-# Create mesh node
-node = pyrogue.mesh.MeshNode(group,iface=iface)
-
-# Start mesh
-node.start()
-
-# Wait for our node
-print("Waiting for evalBoard")
-evalBoard = node.waitTree('evalBoard')
-print("Got evalBoard. Type stop() to exit.")
+client = pyrogue.PyroClient('rogueTest')
+evalBoard = client.getRoot('evalBoard')
 
 def stop():
-    node.stop()
+    client.stop()
     exit()
 

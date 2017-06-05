@@ -18,7 +18,6 @@
 # copied, modified, propagated, or distributed except according to the terms 
 # contained in the LICENSE.txt file.
 #-----------------------------------------------------------------------------
-import pyrogue.mesh
 import pyrogue.gui
 import PyQt4.QtGui
 import getopt
@@ -26,7 +25,7 @@ import sys
 import logging
 
 group = 'rogueTest'
-iface = None
+iface = '127.0.0.1'
 
 try:
     opts, args = getopt.getopt(sys.argv[1:],"hi:g:")
@@ -36,7 +35,7 @@ except getopt.GetoptError:
 
 for opt, arg in opts:
     if opt == '-h':
-        print('test.py -i <inputfile> -o <outputfile>')
+        print('test.py -i <interface> -g <group>')
         sys.exit()
     elif opt in ("-i"):
         iface = arg
@@ -45,24 +44,15 @@ for opt, arg in opts:
 
 print("Using interface {} for group {}".format(iface,group))
 
-#logger = logging.getLogger("pyre")
-#logger.setLevel(logging.DEBUG)
-
-# Create mesh node
-node = pyrogue.mesh.MeshNode(group,iface=iface)
+client = pyrogue.PyroClient('rogueTest')
 
 # Create GUI
 appTop = PyQt4.QtGui.QApplication(sys.argv)
 guiTop = pyrogue.gui.GuiTop(group)
-node.setNewTreeCb(guiTop.addTree)
-
-# Start mesh
-node.start()
+guiTop.addTree(client.getRoot('evalBoard'))
 
 # Run gui
 appTop.exec_()
 
-# Stop mesh after gui exits
-print("Waiting on node")
-node.stop()
+client.stop()
 
