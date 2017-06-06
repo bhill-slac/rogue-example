@@ -136,8 +136,8 @@ class EvalBoard(pyrogue.Root):
         self.epics = pyrogue.epics.EpicsCaServer('rogueTest',self)
         self.epics.start()
 
-    def stop():
-        epics.stop()
+    def stop(self):
+        self.epics.stop()
         super().stop()
 
 
@@ -148,4 +148,5 @@ if __name__ == "__main__":
     # Close window and stop polling
     def stop():
         evalBoard.stop()
+        exit()
 
