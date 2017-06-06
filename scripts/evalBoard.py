@@ -20,6 +20,7 @@
 #-----------------------------------------------------------------------------
 import pyrogue.utilities.prbs
 import pyrogue.utilities.fileio
+import pyrogue
 import rogue.interfaces.stream
 import pyrogue.epics
 import surf.axi
@@ -72,9 +73,6 @@ class MyRunControl(pyrogue.RunControl):
       self._last = int(time.time())
 
       while (self.runState.get(read=False) == 'Running'):
-
-
-
          delay = 1.0 / ({value: key for key,value in self.runRate.enum.items()}[self._runRate])
          time.sleep(delay)
          self._root.ssiPrbsTx.oneShot()
@@ -84,60 +82,70 @@ class MyRunControl(pyrogue.RunControl):
              self._last = int(time.time())
              self.runCount._updated()
 
-# Set base
-evalBoard = pyrogue.Root('evalBoard','Evaluation Board')
+class EvalBoard(pyrogue.Root):
 
-# Run control
-evalBoard.add(MyRunControl('runControl'))
+    def __init__(self):
 
-# File writer
-dataWriter = pyrogue.utilities.fileio.StreamWriter('dataWriter')
-evalBoard.add(dataWriter)
+        pyrogue.Root.__init__(self,'evalBoard','Evaluation Board')
 
-# Create the PGP interfaces
-pgpVc0 = rogue.hardware.pgp.PgpCard('/dev/pgpcard_0',0,0) # Registers
-pgpVc1 = rogue.hardware.pgp.PgpCard('/dev/pgpcard_0',0,1) # Data
-pgpVc3 = rogue.hardware.pgp.PgpCard('/dev/pgpcard_0',0,3) # Microblaze
+        # Run control
+        self.add(MyRunControl('runControl'))
+        
+        # File writer
+        dataWriter = pyrogue.utilities.fileio.StreamWriter('dataWriter')
+        self.add(dataWriter)
+        
+        # Create the PGP interfaces
+        pgpVc0 = rogue.hardware.pgp.PgpCard('/dev/pgpcard_0',0,0) # Registers
+        pgpVc1 = rogue.hardware.pgp.PgpCard('/dev/pgpcard_0',0,1) # Data
+        pgpVc3 = rogue.hardware.pgp.PgpCard('/dev/pgpcard_0',0,3) # Microblaze
+        
+        print("")
+        print("PGP Card Version: %x" % (pgpVc0.getInfo().version))
+        
+        # Create and Connect SRP to VC0
+        srp = rogue.protocols.srp.SrpV0()
+        pyrogue.streamConnectBiDir(pgpVc0,srp)
+        
+        # Add configuration stream to file as channel 0
+        pyrogue.streamConnect(self,dataWriter.getChannel(0x0))
+        
+        # Add data stream to file as channel 1
+        pyrogue.streamConnect(pgpVc1,dataWriter.getChannel(0x1))
+        
+        ## Add microblaze console stream to file as channel 2
+        pyrogue.streamConnect(pgpVc3,dataWriter.getChannel(0x2))
+        
+        # PRBS Receiver as secdonary receiver for VC1
+        prbsRx = pyrogue.utilities.prbs.PrbsRx('prbsRx')
+        pyrogue.streamTap(pgpVc1,prbsRx)
+        self.add(prbsRx)
+        
+        # Microblaze console monitor add secondary tap
+        mbcon = MbDebug()
+        pyrogue.streamTap(pgpVc3,mbcon)
+        
+        # Add Devices
+        self.add(surf.axi.AxiVersion(memBase=srp,offset=0x0))
+        self.add(surf.protocols.ssi.SsiPrbsTx(memBase=srp,offset=0x30000))
+        
+        # Export remote objects
+        self.exportRoot('rogueTest')
+        
+        # Create epics node
+        self.epics = pyrogue.epics.EpicsCaServer('rogueTest',self)
+        self.epics.start()
 
-print("")
-print("PGP Card Version: %x" % (pgpVc0.getInfo().version))
+    def stop():
+        epics.stop()
+        super().stop()
 
-# Create and Connect SRP to VC0
-srp = rogue.protocols.srp.SrpV0()
-pyrogue.streamConnectBiDir(pgpVc0,srp)
 
-# Add configuration stream to file as channel 0
-pyrogue.streamConnect(evalBoard,dataWriter.getChannel(0x0))
+if __name__ == "__main__":
 
-# Add data stream to file as channel 1
-pyrogue.streamConnect(pgpVc1,dataWriter.getChannel(0x1))
+    evalBoard = EvalBoard()
 
-## Add microblaze console stream to file as channel 2
-pyrogue.streamConnect(pgpVc3,dataWriter.getChannel(0x2))
-
-# PRBS Receiver as secdonary receiver for VC1
-prbsRx = pyrogue.utilities.prbs.PrbsRx('prbsRx')
-pyrogue.streamTap(pgpVc1,prbsRx)
-evalBoard.add(prbsRx)
-
-# Microblaze console monitor add secondary tap
-mbcon = MbDebug()
-pyrogue.streamTap(pgpVc3,mbcon)
-
-# Add Devices
-evalBoard.add(surf.axi.AxiVersion(memBase=srp,offset=0x0))
-evalBoard.add(surf.protocols.ssi.SsiPrbsTx(memBase=srp,offset=0x30000))
-
-# Export remote objects
-evalBoard.exportRoot('rogueTest')
-
-# Create epics node
-epics = pyrogue.epics.EpicsCaServer('rogueTest',evalBoard)
-epics.start()
-
-# Close window and stop polling
-def stop():
-    epics.stop()
-    evalBoard.stop()
-    exit()
+    # Close window and stop polling
+    def stop():
+        evalBoard.stop()
 
