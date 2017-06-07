@@ -139,6 +139,8 @@ class EvalBoard(pyrogue.Root):
         self.epics = pyrogue.epics.EpicsCaServer('rogueTest',self,pvMap)
         self.epics.start()
 
+        self.testBlock = pyrogue.RawBlock(srp)
+
     def stop(self):
         self.epics.stop()
         super().stop()
