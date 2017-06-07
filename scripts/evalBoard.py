@@ -131,9 +131,12 @@ class EvalBoard(pyrogue.Root):
         
         # Export remote objects
         self.exportRoot('rogueTest')
-        
+
         # Create epics node
-        self.epics = pyrogue.epics.EpicsCaServer('rogueTest',self)
+        pvMap = {'evalBoard.AxiVersion.UpTimeCnt':'testCnt',
+                 'evalBoard.AxiVersion.ScratchPad':'testPad'}
+        pvMap = None  # Comment out to enable map
+        self.epics = pyrogue.epics.EpicsCaServer('rogueTest',self,pvMap)
         self.epics.start()
 
     def stop(self):
