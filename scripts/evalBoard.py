@@ -21,6 +21,7 @@
 import pyrogue.utilities.prbs
 import pyrogue.utilities.fileio
 import pyrogue
+import pyrogue.smem
 import rogue.interfaces.stream
 import pyrogue.epics
 import surf.axi
@@ -140,6 +141,7 @@ class EvalBoard(pyrogue.Root):
         self.epics.start()
 
         self.testBlock = pyrogue.RawBlock(srp)
+        self.smem = pyrogue.smem.SMemControl('rogueTest',self)
 
     def stop(self):
         self.epics.stop()
