@@ -18,10 +18,6 @@ use this file execute the following in your tcsh:
 
 > source setup_template.csh
 
-An RCE version is available as well
-
-> source setup_rce.csh
-
 If using a different shell the equivelent setup file for that shell 
 must be created.
 
