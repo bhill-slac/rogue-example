@@ -20,48 +20,28 @@
 # ----------------------------------------------------------------------------
 # 
 
-# Python 3
-PYCONF = python3-config
-PYBOOST = -lboost_python3
-
-# Python 2
-#PYCONF = python2.7-config
-#PYBOOST = -lboost_python
-
 # Variables
 CC       := g++
 DEF      :=
-CFLAGS   := -Wall `$(PYCONF) --cflags` -I $(BOOST_PATH)/include -I$(ROGUE_DIR)/include -std=c++0x -fPIC 
-LFLAGS   := `$(PYCONF) --ldflags` -lboost_thread $(PYBOOST) -lboost_system
-LFLAGS   += -L`$(PYCONF) --prefix`/lib/ -L$(BOOST_PATH)/lib -l:rogue.so -L$(ROGUE_DIR)/python
-DST      := $(PWD)/python
-SHNAME   := rogue_example
-SHLIB    := rogue_example.so
+CFLAGS   := -Wall `python3-config --cflags | sed s/-Wstrict-prototypes//` -fno-strict-aliasing
+CFLAGS   += -I$(BOOST_PATH)/include -I$(ROGUE_DIR)/include -std=c++0x -fPIC
+LFLAGS   := -lrogue -L$(ROGUE_DIR)/lib
+BIN      := $(PWD)/bin
 
 # Sources
-LIB_SRC := $(PWD)/src
-LIB_CPP := $(foreach dir,$(shell find $(LIB_SRC) -type d),$(wildcard $(dir)/*.cpp))
-LIB_OBJ := $(patsubst %.cpp,%.o,$(LIB_CPP))
-LIB_SHO := $(DST)/$(SHLIB)
+APP_DIR := $(PWD)/src
+APP_SRC := $(wildcard $(APP_DIR)/*.cpp)
+APP_BIN := $(patsubst $(APP_DIR)/%.cpp,$(BIN)/%,$(APP_SRC))
 
 # Targets
-all: $(LIB_OBJ) $(LIB_SHO)
+all: $(APP_BIN)
 
 # Clean
 clean:
-	@rm -f $(LIB_OBJ)
-	@rm -f $(LIB_SHO)
-
-# Compile sources with headers
-%.o: %.cpp %.h
-	@echo "Compiling $@"; $(CC) -c $(CFLAGS) $(DEF) -o $@ $<
-
-# Compile sources without headers
-%.o: %.cpp
-	@echo "Compiling $@"; $(CC) -c $(CFLAGS) $(DEF) -o $@ $<
+	@rm -f $(BIN)/*
 
 # Compile Shared Library
-$(LIB_SHO): $(LIB_OBJ)
-	@test -d $(DST) || mkdir $(DST)
-	@echo "Creating $@"; $(CC) -shared -Wl,-soname,$(SHNAME) $(LIB_OBJ) $(LFLAGS) -o $@
+$(BIN)/%: $(APP_DIR)/%.cpp
+	@test -d $(BIN) || mkdir $(BIN)
+	@echo "Creating $@"; $(CC) $(CFLAGS) $(LFLAGS) -o $@ $<
 

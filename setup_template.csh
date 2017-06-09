@@ -11,5 +11,5 @@ setenv SURF_DIR   ${PWD}/../surf
 setenv ROGUE_DIR  ${PWD}/../rogue
 
 # Setup python path
-setenv PYTHONPATH ${PWD}/python:${SURF_DIR}/python:${ROGUE_DIR}/python:${PYTHONPATH}
+setenv PYTHONPATH ${SURF_DIR}/python:${ROGUE_DIR}/python:${PYTHONPATH}
 
