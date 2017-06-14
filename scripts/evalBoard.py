@@ -38,6 +38,7 @@ import datetime
 
 #logging.getLogger("pyrogue.EpicsCaServer").setLevel(logging.INFO)
 #logging.getLogger("pyrogue.MemoryBlock").setLevel(logging.DEBUG)
+rogue.Logging.setLevel(rogue.Logging.Debug)
 
 # Microblaze console printout
 class MbDebug(rogue.interfaces.stream.Slave):
@@ -53,49 +54,16 @@ class MbDebug(rogue.interfaces.stream.Slave):
          print('-------- Microblaze Console --------')
          print(p.decode('utf-8'))
 
-# Custom run control
-class MyRunControl(pyrogue.RunControl):
-   def __init__(self,name):
-      pyrogue.RunControl.__init__(self,name=name,description='Run Controller',
-                                  rates={1:'1 Hz', 10:'10 Hz', 30:'30 Hz'})
-      self._thread = None
-
-   def _setRunState(self,dev,var,value,changed):
-      if changed:
-         if self.runState.get(read=False) == 'Running':
-            self._thread = threading.Thread(target=self._run)
-            self._thread.start()
-         else:
-            self._thread.join()
-            self._thread = None
-
-   def _run(self):
-      self.runCount.set(0)
-      self._last = int(time.time())
-
-      while (self.runState.get(read=False) == 'Running'):
-         delay = 1.0 / ({value: key for key,value in self.runRate.enum.items()}[self._runRate])
-         time.sleep(delay)
-         self._root.ssiPrbsTx.oneShot()
-
-         self._runCount += 1
-         if self._last != int(time.time()):
-             self._last = int(time.time())
-             self.runCount._updated()
-
 class EvalBoard(pyrogue.Root):
 
     def __init__(self):
 
-        pyrogue.Root.__init__(self,'evalBoard','Evaluation Board')
+        pyrogue.Root.__init__(self,'evalBoard','Evaluation Board',pollEn=True)
 
-        # Run control
-        self.add(MyRunControl('runControl'))
-        
         # File writer
         dataWriter = pyrogue.utilities.fileio.StreamWriter('dataWriter')
         self.add(dataWriter)
-        
+
         # Create the PGP interfaces
         pgpVc0 = rogue.hardware.pgp.PgpCard('/dev/pgpcard_0',0,0) # Registers
         pgpVc1 = rogue.hardware.pgp.PgpCard('/dev/pgpcard_0',0,1) # Data
@@ -143,10 +111,16 @@ class EvalBoard(pyrogue.Root):
         self.testBlock = pyrogue.RawBlock(srp)
         self.smem = pyrogue.smem.SMemControl('rogueTest',self)
 
+        # Run control
+        self.add(pyrogue.RunControl('runControl' 
+                                    rates={1:'1 Hz', 10:'10 Hz',30:'30 Hz'}, 
+                                    cmd=self.SsiPrbsTx.oneShot())
+                                   
+        #self.warnDeprecated()
+
     def stop(self):
         self.epics.stop()
         super().stop()
-
 
 if __name__ == "__main__":
 
