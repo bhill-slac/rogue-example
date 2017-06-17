@@ -58,7 +58,7 @@ class EvalBoard(pyrogue.Root):
 
     def __init__(self):
 
-        pyrogue.Root.__init__(self,'evalBoard','Evaluation Board',pollEn=True)
+        pyrogue.Root.__init__(self,'evalBoard','Evaluation Board',pollEn=False)
 
         # File writer
         dataWriter = pyrogue.utilities.fileio.StreamWriter('dataWriter')
@@ -112,9 +112,9 @@ class EvalBoard(pyrogue.Root):
         self.smem = pyrogue.smem.SMemControl('rogueTest',self)
 
         # Run control
-        self.add(pyrogue.RunControl('runControl' 
-                                    rates={1:'1 Hz', 10:'10 Hz',30:'30 Hz'}, 
-                                    cmd=self.SsiPrbsTx.oneShot())
+        self.add(pyrogue.RunControl('runControl' ,
+                                    rates={1:'1 Hz', 10:'10 Hz',30:'30 Hz'}))
+                                    #cmd=self.SsiPrbsTx.oneShot()))
                                    
         #self.warnDeprecated()
 
