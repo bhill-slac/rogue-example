@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #-----------------------------------------------------------------------------
 # Title      : Script Client
 #-----------------------------------------------------------------------------
@@ -22,7 +22,6 @@ import pyrogue.gui
 import sys
 
 group = 'rogueTest'
-iface = '127.0.0.1'
 
 client = pyrogue.PyroClient('rogueTest')
 evalBoard = client.getRoot('evalBoard')
