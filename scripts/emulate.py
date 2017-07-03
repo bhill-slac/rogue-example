@@ -73,7 +73,7 @@ class EvalBoard(pyrogue.Root):
                                     #cmd=self.SsiPrbsTx.oneShot()))
 
         # Export remote objects
-        self.start(pyroGroup='rogueTest')
+    #    self.start(pyroGroup='rogueTest')
 
         # Create epics node
         pvMap = {'evalBoard.AxiVersion.UpTimeCnt':'testCnt',
