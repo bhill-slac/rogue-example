@@ -41,7 +41,7 @@ import datetime
 
 #logging.getLogger("pyrogue.EpicsCaServer").setLevel(logging.INFO)
 #logging.getLogger("pyrogue.MemoryBlock").setLevel(logging.DEBUG)
-rogue.Logging.setLevel(rogue.Logging.Debug)
+#rogue.Logging.setLevel(rogue.Logging.Debug)
 
 class EvalBoard(pyrogue.Root):
 
@@ -66,13 +66,13 @@ class EvalBoard(pyrogue.Root):
         pyrogue.streamConnect(udp.application(1),dataWriter.getChannel(0x1))
         
         # PRBS Receiver as secdonary receiver for VC1
-        prbsRx = pyrogue.utilities.prbs.PrbsRx('prbsRx')
-        pyrogue.streamTap(udp.application(1),prbsRx)
-        self.add(prbsRx)
+        #prbsRx = pyrogue.utilities.prbs.PrbsRx('prbsRx')
+        #pyrogue.streamTap(udp.application(1),prbsRx)
+        #self.add(prbsRx)
         
         # Add Devices
-        self.add(surf.axi.AxiVersion(memBase=srp,offset=0x0))
-        self.add(surf.protocols.ssi.SsiPrbsTx(memBase=srp,offset=0x40000))
+        self.add(surf.axi.AxiVersion(memBase=srp,offset=0x0,expand=False))
+        #self.add(surf.protocols.ssi.SsiPrbsTx(memBase=srp,offset=0x40000))
         
         self.testBlock = pyrogue.RawBlock(srp)
         self.smem = pyrogue.smem.SMemControl('rogueTest',self)
@@ -83,7 +83,7 @@ class EvalBoard(pyrogue.Root):
                                     #cmd=self.SsiPrbsTx.oneShot()))
 
         # Export remote objects
-        self.start(pyroGroup='rogueTest')
+        self.start(pollEn=False,pyroGroup='rogueTest')
 
         # Create epics node
         pvMap = {'evalBoard.AxiVersion.UpTimeCnt':'testCnt',
@@ -95,7 +95,6 @@ class EvalBoard(pyrogue.Root):
     def stop(self):
         self.epics.stop()
         super().stop()
-
 
 if __name__ == "__main__":
 
@@ -114,4 +113,20 @@ if __name__ == "__main__":
     # Run gui
     appTop.exec_()
     evalBoard.stop()
+
+    cnt = 0
+    inc = 0
+    last = time.localtime()
+
+    while True:
+        evalBoard.AxiVersion.testRead()
+        #evalBoard.AxiVersion.ScratchPad.get()
+        curr = time.localtime()
+        cnt += 1
+        inc += 1
+
+        if curr != last:
+            print("Cnt={}, rate={}".format(cnt,inc))
+            last = curr
+            inc = 0
 
