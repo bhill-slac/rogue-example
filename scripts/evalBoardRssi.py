@@ -40,8 +40,9 @@ import logging
 import datetime
 
 #logging.getLogger("pyrogue.EpicsCaServer").setLevel(logging.INFO)
-#logging.getLogger("pyrogue.MemoryBlock").setLevel(logging.DEBUG)
+#logging.getLogger("pyrogue").setLevel(logging.DEBUG)
 #rogue.Logging.setLevel(rogue.Logging.Debug)
+#rogue.Logging.setFilter("pyrogue.rssi",rogue.Logging.Debug)
 
 class EvalBoard(pyrogue.Root):
 
@@ -55,26 +56,25 @@ class EvalBoard(pyrogue.Root):
 
         # Create the PGP interfaces
         udp = pyrogue.protocols.UdpRssiPack(host='192.168.2.194',port=8192,size=1400)
-        
+
         # Create and Connect SRP to VC0
         srp = rogue.protocols.srp.SrpV3()
         pyrogue.streamConnectBiDir(srp,udp.application(0))
 
         # Add configuration stream to file as channel 0
         pyrogue.streamConnect(self,dataWriter.getChannel(0x0))
-        
+
         pyrogue.streamConnect(udp.application(1),dataWriter.getChannel(0x1))
-        
+
         # PRBS Receiver as secdonary receiver for VC1
         #prbsRx = pyrogue.utilities.prbs.PrbsRx('prbsRx')
         #pyrogue.streamTap(udp.application(1),prbsRx)
         #self.add(prbsRx)
-        
+
         # Add Devices
         self.add(surf.axi.AxiVersion(memBase=srp,offset=0x0,expand=False))
         #self.add(surf.protocols.ssi.SsiPrbsTx(memBase=srp,offset=0x40000))
-        
-        self.testBlock = pyrogue.RawBlock(srp)
+
         self.smem = pyrogue.smem.SMemControl('rogueTest',self)
 
         # Run control
@@ -111,15 +111,16 @@ if __name__ == "__main__":
     guiTop.addTree(evalBoard)
 
     # Run gui
-    appTop.exec_()
-    evalBoard.stop()
+    #appTop.exec_()
+    #evalBoard.stop()
 
     cnt = 0
     inc = 0
     last = time.localtime()
 
     while True:
-        evalBoard.AxiVersion.testRead()
+        evalBoard.AxiVersion.rawRead(0x4)
+        #evalBoard.AxiVersion.testRead()
         #evalBoard.AxiVersion.ScratchPad.get()
         curr = time.localtime()
         cnt += 1
