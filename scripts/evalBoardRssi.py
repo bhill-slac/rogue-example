@@ -106,9 +106,9 @@ if __name__ == "__main__":
         exit()
 
     # Create GUI
-    appTop = PyQt4.QtGui.QApplication(sys.argv)
-    guiTop = pyrogue.gui.GuiTop('rogueTest')
-    guiTop.addTree(evalBoard)
+    #appTop = PyQt4.QtGui.QApplication(sys.argv)
+    #guiTop = pyrogue.gui.GuiTop('rogueTest')
+    #guiTop.addTree(evalBoard)
 
     # Run gui
     #appTop.exec_()
@@ -119,7 +119,7 @@ if __name__ == "__main__":
     last = time.localtime()
 
     while True:
-        evalBoard.AxiVersion.rawRead(0x4)
+        evalBoard.AxiVersion._rawRead(0x4)
         #evalBoard.AxiVersion.testRead()
         #evalBoard.AxiVersion.ScratchPad.get()
         curr = time.localtime()

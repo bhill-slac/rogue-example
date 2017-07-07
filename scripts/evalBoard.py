@@ -40,7 +40,7 @@ import datetime
 
 #logging.getLogger("pyrogue.EpicsCaServer").setLevel(logging.INFO)
 #logging.getLogger("pyrogue.MemoryBlock").setLevel(logging.DEBUG)
-rogue.Logging.setLevel(rogue.Logging.Debug)
+#rogue.Logging.setLevel(rogue.Logging.Debug)
 
 # Microblaze console printout
 class MbDebug(rogue.interfaces.stream.Slave):
