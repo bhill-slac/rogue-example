@@ -73,20 +73,20 @@ class EvalBoard(pyrogue.Root):
         
         print("")
         print("PGP Card Version: %x" % (pgpVc0.getInfo().version))
-        
+
         # Create and Connect SRP to VC0
         srp = rogue.protocols.srp.SrpV0()
         pyrogue.streamConnectBiDir(pgpVc0,srp)
-        
+
         # Add configuration stream to file as channel 0
         pyrogue.streamConnect(self,dataWriter.getChannel(0x0))
-        
+
         # Add data stream to file as channel 1
         pyrogue.streamConnect(pgpVc1,dataWriter.getChannel(0x1))
         
         ## Add microblaze console stream to file as channel 2
         pyrogue.streamConnect(pgpVc3,dataWriter.getChannel(0x2))
-        
+
         # PRBS Receiver as secdonary receiver for VC1
         prbsRx = pyrogue.utilities.prbs.PrbsRx('prbsRx')
         pyrogue.streamTap(pgpVc1,prbsRx)
@@ -95,16 +95,15 @@ class EvalBoard(pyrogue.Root):
         # Microblaze console monitor add secondary tap
         mbcon = MbDebug()
         pyrogue.streamTap(pgpVc3,mbcon)
-        
+
         # Add Devices
         self.add(surf.axi.AxiVersion(memBase=srp,offset=0x0))
         self.add(surf.protocols.ssi.SsiPrbsTx(memBase=srp,offset=0x30000))
-        
-        self.testBlock = pyrogue.RawBlock(srp)
-        self.smem = pyrogue.smem.SMemControl('rogueTest',self)
+
+        self.smem = pyrogue.smem.SMemControl(group='rogueTest',root=self)
 
         # Run control
-        self.add(pyrogue.RunControl('runControl' ,
+        self.add(pyrogue.RunControl(name='runControl' ,
                                     rates={1:'1 Hz', 10:'10 Hz',30:'30 Hz'}))
                                     #cmd=self.SsiPrbsTx.oneShot()))
 
@@ -115,7 +114,7 @@ class EvalBoard(pyrogue.Root):
         pvMap = {'evalBoard.AxiVersion.UpTimeCnt':'testCnt',
                  'evalBoard.AxiVersion.ScratchPad':'testPad'}
         pvMap = None  # Comment out to enable map
-        self.epics = pyrogue.epics.EpicsCaServer('rogueTest',self,pvMap)
+        self.epics = pyrogue.epics.EpicsCaServer(base='rogueTest',root=self,pvMap=pvMap)
         self.epics.start()
 
     def stop(self):
@@ -134,7 +133,7 @@ if __name__ == "__main__":
 
     # Create GUI
     appTop = PyQt4.QtGui.QApplication(sys.argv)
-    guiTop = pyrogue.gui.GuiTop('rogueTest')
+    guiTop = pyrogue.gui.GuiTop(group='rogueTest')
     guiTop.addTree(evalBoard)
 
     # Run gui

@@ -48,10 +48,10 @@ class EvalBoard(pyrogue.Root):
 
     def __init__(self):
 
-        pyrogue.Root.__init__(self,'evalBoard','Evaluation Board')
+        pyrogue.Root.__init__(self,name='evalBoard',description='Evaluation Board')
 
         # File writer
-        dataWriter = pyrogue.utilities.fileio.StreamWriter('dataWriter')
+        dataWriter = pyrogue.utilities.fileio.StreamWriter(name='dataWriter')
         self.add(dataWriter)
 
         # Create the PGP interfaces
@@ -75,21 +75,21 @@ class EvalBoard(pyrogue.Root):
         self.add(surf.axi.AxiVersion(memBase=srp,offset=0x0,expand=False))
         #self.add(surf.protocols.ssi.SsiPrbsTx(memBase=srp,offset=0x40000))
 
-        self.smem = pyrogue.smem.SMemControl('rogueTest',self)
+        self.smem = pyrogue.smem.SMemControl(group='rogueTest',root=self)
 
         # Run control
-        self.add(pyrogue.RunControl('runControl' ,
+        self.add(pyrogue.RunControl(name='runControl' ,
                                     rates={1:'1 Hz', 10:'10 Hz',30:'30 Hz'}))
                                     #cmd=self.SsiPrbsTx.oneShot()))
 
         # Export remote objects
-        self.start(pollEn=False,pyroGroup='rogueTest')
+        self.start(pollEn=True,pyroGroup='rogueTest')
 
         # Create epics node
         pvMap = {'evalBoard.AxiVersion.UpTimeCnt':'testCnt',
                  'evalBoard.AxiVersion.ScratchPad':'testPad'}
         pvMap = None  # Comment out to enable map
-        self.epics = pyrogue.epics.EpicsCaServer('rogueTest',self,pvMap)
+        self.epics = pyrogue.epics.EpicsCaServer(base='rogueTest',root=self,pvMap=pvMap)
         self.epics.start()
 
     def stop(self):
@@ -106,13 +106,13 @@ if __name__ == "__main__":
         exit()
 
     # Create GUI
-    #appTop = PyQt4.QtGui.QApplication(sys.argv)
-    #guiTop = pyrogue.gui.GuiTop('rogueTest')
-    #guiTop.addTree(evalBoard)
+    appTop = PyQt4.QtGui.QApplication(sys.argv)
+    guiTop = pyrogue.gui.GuiTop(group='rogueTest')
+    guiTop.addTree(evalBoard)
 
     # Run gui
-    #appTop.exec_()
-    #evalBoard.stop()
+    appTop.exec_()
+    evalBoard.stop()
 
     cnt = 0
     inc = 0
