@@ -39,10 +39,11 @@ import testBridge
 import logging
 import datetime
 
-#logging.getLogger("pyrogue.EpicsCaServer").setLevel(logging.INFO)
+logging.getLogger("pyrogue.PollQueue").setLevel(logging.DEBUG)
 #logging.getLogger("pyrogue").setLevel(logging.DEBUG)
 #rogue.Logging.setLevel(rogue.Logging.Debug)
 #rogue.Logging.setFilter("pyrogue.rssi",rogue.Logging.Debug)
+rogue.Logging.setFilter("pyrogue.memory.Master",rogue.Logging.Info)
 
 class EvalBoard(pyrogue.Root):
 
