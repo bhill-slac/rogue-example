@@ -18,15 +18,10 @@
 # copied, modified, propagated, or distributed except according to the terms 
 # contained in the LICENSE.txt file.
 #-----------------------------------------------------------------------------
-import pyrogue.gui
-import sys
+import pyrogue 
 
-group = 'rogueTest'
-
-client = pyrogue.PyroClient('rogueTest')
+#client = pyrogue.PyroClient(group='rogueTest',host='134.79.229.11',ns='134.79.229.11')
+#client = pyrogue.PyroClient(group='rogueTest',host='134.79.229.11')
+client = pyrogue.PyroClient(group='rogueTest')
 evalBoard = client.getRoot('evalBoard')
-
-def stop():
-    client.stop()
-    exit()
 

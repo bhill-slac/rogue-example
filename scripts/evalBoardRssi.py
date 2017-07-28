@@ -39,11 +39,11 @@ import testBridge
 import logging
 import datetime
 
-logging.getLogger("pyrogue.PollQueue").setLevel(logging.DEBUG)
+#logging.getLogger("pyrogue.PollQueue").setLevel(logging.DEBUG)
 #logging.getLogger("pyrogue").setLevel(logging.DEBUG)
 #rogue.Logging.setLevel(rogue.Logging.Debug)
 #rogue.Logging.setFilter("pyrogue.rssi",rogue.Logging.Debug)
-rogue.Logging.setFilter("pyrogue.memory.Master",rogue.Logging.Info)
+#rogue.Logging.setFilter("pyrogue.memory.Master",rogue.Logging.Info)
 
 class EvalBoard(pyrogue.Root):
 
@@ -76,6 +76,8 @@ class EvalBoard(pyrogue.Root):
         self.add(surf.axi.AxiVersion(memBase=srp,offset=0x0,expand=False))
         #self.add(surf.protocols.ssi.SsiPrbsTx(memBase=srp,offset=0x40000))
 
+        self.add(pyrogue.LocalVariable(name='list',value=([0] * 10)))
+
         self.smem = pyrogue.smem.SMemControl(group='rogueTest',root=self)
 
         # Run control
@@ -84,6 +86,9 @@ class EvalBoard(pyrogue.Root):
                                     #cmd=self.SsiPrbsTx.oneShot()))
 
         # Export remote objects
+        #self.start(pollEn=True,pyroGroup='rogueTest',pyroHost='134.79.229.11',pyroNs='134.79.229.11')
+        #self.start(pollEn=True,pyroGroup='rogueTest',pyroHost='134.79.229.11')
+        #self.start(pollEn=True,pyroGroup='rogueTest')
         self.start(pollEn=True,pyroGroup='rogueTest')
 
         # Create epics node
@@ -107,28 +112,28 @@ if __name__ == "__main__":
         exit()
 
     # Create GUI
-    appTop = PyQt4.QtGui.QApplication(sys.argv)
-    guiTop = pyrogue.gui.GuiTop(group='rogueTest')
-    guiTop.addTree(evalBoard)
+    if True:
+        appTop = PyQt4.QtGui.QApplication(sys.argv)
+        guiTop = pyrogue.gui.GuiTop(group='rogueTest')
+        guiTop.addTree(evalBoard)
 
-    # Run gui
-    appTop.exec_()
-    evalBoard.stop()
+        # Run gui
+        appTop.exec_()
+        evalBoard.stop()
 
     cnt = 0
     inc = 0
     last = time.localtime()
 
     while True:
-        evalBoard.AxiVersion._rawRead(0x4)
-        #evalBoard.AxiVersion.testRead()
+        val = evalBoard.AxiVersion._rawRead(0x4)
         #evalBoard.AxiVersion.ScratchPad.get()
         curr = time.localtime()
         cnt += 1
         inc += 1
 
         if curr != last:
-            print("Cnt={}, rate={}".format(cnt,inc))
+            print("Cnt={}, rate={}, val={}".format(cnt,inc,val))
             last = curr
             inc = 0
 
