@@ -106,34 +106,11 @@ if __name__ == "__main__":
 
     evalBoard = EvalBoard()
 
-    # Close window and stop polling
-    def stop():
-        evalBoard.stop()
-        exit()
+    appTop = PyQt4.QtGui.QApplication(sys.argv)
+    guiTop = pyrogue.gui.GuiTop(group='rogueTest')
+    guiTop.addTree(evalBoard)
 
-    # Create GUI
-    if True:
-        appTop = PyQt4.QtGui.QApplication(sys.argv)
-        guiTop = pyrogue.gui.GuiTop(group='rogueTest')
-        guiTop.addTree(evalBoard)
-
-        # Run gui
-        appTop.exec_()
-        evalBoard.stop()
-
-    cnt = 0
-    inc = 0
-    last = time.localtime()
-
-    while True:
-        val = evalBoard.AxiVersion._rawRead(0x4)
-        #evalBoard.AxiVersion.ScratchPad.get()
-        curr = time.localtime()
-        cnt += 1
-        inc += 1
-
-        if curr != last:
-            print("Cnt={}, rate={}, val={}".format(cnt,inc,val))
-            last = curr
-            inc = 0
+    # Run gui
+    appTop.exec_()
+    evalBoard.stop()
 

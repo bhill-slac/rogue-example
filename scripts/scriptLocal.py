@@ -19,6 +19,7 @@
 # contained in the LICENSE.txt file.
 #-----------------------------------------------------------------------------
 import pyrogue.gui
+import pyrogue.protocols
 import PyQt4.QtGui
 import pyrogue.utilities.prbs
 import pyrogue.utilities.fileio
@@ -37,66 +38,74 @@ import sys
 import testBridge
 import logging
 import datetime
-import pyrogue.simulation
 
-#logging.getLogger("pyrogue.EpicsCaServer").setLevel(logging.INFO)
-#logging.getLogger("pyrogue.MemoryBlock").setLevel(logging.DEBUG)
-rogue.Logging.setLevel(rogue.Logging.Debug)
+#logging.getLogger("pyrogue.PollQueue").setLevel(logging.DEBUG)
+#logging.getLogger("pyrogue").setLevel(logging.DEBUG)
+#rogue.Logging.setLevel(rogue.Logging.Debug)
+#rogue.Logging.setFilter("pyrogue.rssi",rogue.Logging.Debug)
+#rogue.Logging.setFilter("pyrogue.memory.Master",rogue.Logging.Info)
 
 class EvalBoard(pyrogue.Root):
 
     def __init__(self):
 
-        pyrogue.Root.__init__(self,'evalBoard','Evaluation Board')
+        pyrogue.Root.__init__(self,name='evalBoard',description='Evaluation Board')
 
         # File writer
-        dataWriter = pyrogue.utilities.fileio.StreamWriter('dataWriter')
+        dataWriter = pyrogue.utilities.fileio.StreamWriter(name='dataWriter')
         self.add(dataWriter)
 
+        # Create the PGP interfaces
+        udp = pyrogue.protocols.UdpRssiPack(host='192.168.2.194',port=8192,size=1400)
+
         # Create and Connect SRP to VC0
-        srp = pyrogue.simulation.MemEmulate()
-        
+        srp = rogue.protocols.srp.SrpV3()
+        pyrogue.streamConnectBiDir(srp,udp.application(0))
+
+        # Add configuration stream to file as channel 0
+        pyrogue.streamConnect(self,dataWriter.getChannel(0x0))
+
+        pyrogue.streamConnect(udp.application(1),dataWriter.getChannel(0x1))
+
         # PRBS Receiver as secdonary receiver for VC1
-        prbsRx = pyrogue.utilities.prbs.PrbsRx('prbsRx')
-        self.add(prbsRx)
-        
+        #prbsRx = pyrogue.utilities.prbs.PrbsRx('prbsRx')
+        #pyrogue.streamTap(udp.application(1),prbsRx)
+        #self.add(prbsRx)
+
         # Add Devices
-        self.add(surf.axi.AxiVersion(memBase=srp,offset=0x0))
-        self.add(surf.protocols.ssi.SsiPrbsTx(memBase=srp,offset=0x30000))
-        
-        self.testBlock = pyrogue.RawBlock(srp)
-        self.smem = pyrogue.smem.SMemControl('rogueTest',self)
+        self.add(surf.axi.AxiVersion(memBase=srp,offset=0x0,expand=False))
+        #self.add(surf.protocols.ssi.SsiPrbsTx(memBase=srp,offset=0x40000))
+
+        self.add(pyrogue.LocalVariable(name='list',value=([0] * 10)))
+
+        self.smem = pyrogue.smem.SMemControl(group='rogueTest',root=self)
 
         # Run control
-        self.add(pyrogue.RunControl('runControl' ,
+        self.add(pyrogue.RunControl(name='runControl' ,
                                     rates={1:'1 Hz', 10:'10 Hz',30:'30 Hz'}))
                                     #cmd=self.SsiPrbsTx.oneShot()))
 
         # Export remote objects
-    #    self.start(pyroGroup='rogueTest')
+        #self.start(pollEn=True,pyroGroup='rogueTest',pyroHost='134.79.229.11',pyroNs='134.79.229.11')
+        #self.start(pollEn=True,pyroGroup='rogueTest',pyroHost='134.79.229.11')
+        #self.start(pollEn=True,pyroGroup='rogueTest')
+        self.start(pollEn=True,pyroGroup='rogueTest')
 
         # Create epics node
         pvMap = {'evalBoard.AxiVersion.UpTimeCnt':'testCnt',
                  'evalBoard.AxiVersion.ScratchPad':'testPad'}
         pvMap = None  # Comment out to enable map
-        self.epics = pyrogue.epics.EpicsCaServer('rogueTest',self,pvMap)
+        self.epics = pyrogue.epics.EpicsCaServer(base='rogueTest',root=self,pvMap=pvMap)
         self.epics.start()
 
     def stop(self):
         self.epics.stop()
         super().stop()
 
+evalBoard = EvalBoard()
 
-if __name__ == "__main__":
-
-    evalBoard = EvalBoard()
-
-    # Create GUI
-    appTop = PyQt4.QtGui.QApplication(sys.argv)
-    guiTop = pyrogue.gui.GuiTop('rogueTest')
-    guiTop.addTree(evalBoard)
-
-    # Run gui
-    appTop.exec_()
+# Close window and stop polling
+def stop():
     evalBoard.stop()
+    exit()
 

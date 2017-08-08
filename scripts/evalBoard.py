@@ -126,11 +126,6 @@ if __name__ == "__main__":
 
     evalBoard = EvalBoard()
 
-    # Close window and stop polling
-    def stop():
-        evalBoard.stop()
-        exit()
-
     # Create GUI
     appTop = PyQt4.QtGui.QApplication(sys.argv)
     guiTop = pyrogue.gui.GuiTop(group='rogueTest')
