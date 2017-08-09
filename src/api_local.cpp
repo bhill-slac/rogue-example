@@ -1,6 +1,7 @@
 #include <rogue/ApiWrapper.h>
 
 int main (int argc, char **argv) {
+   uint32_t i;
 
    try {
       rogue::ApiWrapperPtr wrap = rogue::ApiWrapper::local("evalBoard","EvalBoard");
