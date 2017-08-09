@@ -11,6 +11,12 @@ int main (int argc, char **argv) {
       wrap->setUInt32("evalBoard.AxiVersion.ScratchPad",0xCC);
       printf("Spad value int = 0x%x\n",wrap->getUInt32("evalBoard.AxiVersion.ScratchPad"));
 
+      rogue::ApiEntryList lst = wrap->getEntries();
+
+      for (i=0; i < lst.size(); i++) {
+         printf("Got path: %s. hidden=%i, typeStr=%s, cmd=%i, arg=%i\n",lst[i]->path.c_str(),lst[i]->hidden,lst[i]->typeStr.c_str(),lst[i]->cmd,lst[i]->cmdArg);
+      }
+
       Py_BEGIN_ALLOW_THREADS;
       while(1) {
          usleep(10);
