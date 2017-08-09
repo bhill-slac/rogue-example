@@ -4,7 +4,7 @@ int main (int argc, char **argv) {
    uint32_t i;
 
    try {
-      rogue::ApiWrapperPtr wrap = rogue::ApiWrapper::local("evalBoard","EvalBoard");
+      rogue::ApiWrapperPtr wrap = rogue::ApiWrapper::local("evalBoardRssi","EvalBoard");
 
       printf("Return value int = %li\n",wrap->getUInt32("evalBoard.AxiVersion.UpTimeCnt"));
       printf("Return value str = %s\n",wrap->getString("evalBoard.AxiVersion.UpTimeCnt").c_str());
