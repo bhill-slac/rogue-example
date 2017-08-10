@@ -25,6 +25,7 @@ import pyrogue.utilities.prbs
 import pyrogue.utilities.fileio
 import pyrogue
 import pyrogue.smem
+import pyrogue.mysql
 import rogue.interfaces.stream
 import pyrogue.epics
 import surf.axi
@@ -98,8 +99,12 @@ class EvalBoard(pyrogue.Root):
         self.epics = pyrogue.epics.EpicsCaServer(base='rogueTest',root=self,pvMap=pvMap)
         self.epics.start()
 
+        self.mysql = pyrogue.mysql.MysqlGw(dbHost='localhost',dbName='rogue',dbUser='rogue',dbPass='rogue',root=self)
+        self.mysql.start()
+
     def stop(self):
         self.epics.stop()
+        self.mysql.stop()
         super().stop()
 
 if __name__ == "__main__":
