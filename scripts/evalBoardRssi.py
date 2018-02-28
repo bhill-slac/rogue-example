@@ -25,7 +25,7 @@ import pyrogue.utilities.prbs
 import pyrogue.utilities.fileio
 import pyrogue
 import pyrogue.smem
-import pyrogue.mysql
+#import pyrogue.mysql
 import rogue.interfaces.stream
 import pyrogue.epics
 import surf.axi
@@ -42,6 +42,7 @@ import datetime
 
 #logging.getLogger("pyrogue.PollQueue").setLevel(logging.DEBUG)
 #logging.getLogger("pyrogue").setLevel(logging.DEBUG)
+#logging.getLogger().setLevel(logging.DEBUG)
 #rogue.Logging.setLevel(rogue.Logging.Debug)
 #rogue.Logging.setFilter("pyrogue.rssi",rogue.Logging.Debug)
 #rogue.Logging.setFilter("pyrogue.memory.Master",rogue.Logging.Info)
@@ -99,17 +100,19 @@ class EvalBoard(pyrogue.Root):
         self.epics = pyrogue.epics.EpicsCaServer(base='rogueTest',root=self,pvMap=pvMap)
         self.epics.start()
 
-        self.mysql = pyrogue.mysql.MysqlGw(dbHost='localhost',dbName='rogue',dbUser='rogue',dbPass='rogue',root=self)
-        self.mysql.start()
+        #self.mysql = pyrogue.mysql.MysqlGw(dbHost='localhost',dbName='rogue',dbUser='rogue',dbPass='rogue',root=self)
+        #self.mysql.start()
 
     def stop(self):
         self.epics.stop()
-        self.mysql.stop()
+        #self.mysql.stop()
         super().stop()
 
 if __name__ == "__main__":
 
     evalBoard = EvalBoard()
+
+    pyrogue.generateAddressMap(evalBoard,"test.csv")
 
     appTop = PyQt4.QtGui.QApplication(sys.argv)
     guiTop = pyrogue.gui.GuiTop(group='rogueTest')

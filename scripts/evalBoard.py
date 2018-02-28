@@ -25,7 +25,7 @@ import pyrogue.utilities.fileio
 import pyrogue
 import pyrogue.smem
 import rogue.interfaces.stream
-import pyrogue.epics
+#import pyrogue.epics
 import surf.axi
 import surf.protocols.ssi
 import threading
@@ -60,20 +60,17 @@ class EvalBoard(pyrogue.Root):
 
     def __init__(self):
 
-        pyrogue.Root.__init__(self,'evalBoard','Evaluation Board')
+        pyrogue.Root.__init__(self,name='evalBoard',description='Evaluation Board')
 
         # File writer
-        dataWriter = pyrogue.utilities.fileio.StreamWriter('dataWriter')
+        dataWriter = pyrogue.utilities.fileio.StreamWriter(name='dataWriter')
         self.add(dataWriter)
 
         # Create the PGP interfaces
-        pgpVc0 = rogue.hardware.pgp.PgpCard('/dev/pgpcard_0',0,0) # Registers
-        pgpVc1 = rogue.hardware.pgp.PgpCard('/dev/pgpcard_0',0,1) # Data
-        pgpVc3 = rogue.hardware.pgp.PgpCard('/dev/pgpcard_0',0,3) # Microblaze
+        pgpVc0 = rogue.hardware.data.DataCard('/dev/datadev_0',0) # Registers
+        pgpVc1 = rogue.hardware.data.DataCard('/dev/datadev_0',1) # Data
+        pgpVc3 = rogue.hardware.data.DataCard('/dev/datadev_0',3) # Microblaze
         
-        print("")
-        print("PGP Card Version: %x" % (pgpVc0.getInfo().version))
-
         # Create and Connect SRP to VC0
         srp = rogue.protocols.srp.SrpV0()
         pyrogue.streamConnectBiDir(pgpVc0,srp)
@@ -88,7 +85,7 @@ class EvalBoard(pyrogue.Root):
         pyrogue.streamConnect(pgpVc3,dataWriter.getChannel(0x2))
 
         # PRBS Receiver as secdonary receiver for VC1
-        prbsRx = pyrogue.utilities.prbs.PrbsRx('prbsRx')
+        prbsRx = pyrogue.utilities.prbs.PrbsRx(name='prbsRx')
         pyrogue.streamTap(pgpVc1,prbsRx)
         self.add(prbsRx)
         
@@ -111,11 +108,11 @@ class EvalBoard(pyrogue.Root):
         self.start(pyroGroup='rogueTest')
 
         # Create epics node
-        pvMap = {'evalBoard.AxiVersion.UpTimeCnt':'testCnt',
-                 'evalBoard.AxiVersion.ScratchPad':'testPad'}
-        pvMap = None  # Comment out to enable map
-        self.epics = pyrogue.epics.EpicsCaServer(base='rogueTest',root=self,pvMap=pvMap)
-        self.epics.start()
+#        pvMap = {'evalBoard.AxiVersion.UpTimeCnt':'testCnt',
+#                 'evalBoard.AxiVersion.ScratchPad':'testPad'}
+#        pvMap = None  # Comment out to enable map
+#        self.epics = pyrogue.epics.EpicsCaServer(base='rogueTest',root=self,pvMap=pvMap)
+#        self.epics.start()
 
     def stop(self):
         self.epics.stop()
