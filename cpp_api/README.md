@@ -31,7 +31,7 @@ There will now be two output files in the bin directory.
 
 ### Setting up the environment
 
-To use this example you will need to reference modules which exist in the surf library. This library is checked out as a submodule of this examples directory. A local setup script will properly add the surf python libraries to your python path.
+To use this example you will need to add the example_devices directory to your python path. A local setup script will properly example_devices directory to your python path.
 
 ````
 $ source setup.sh

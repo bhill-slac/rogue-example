@@ -42,21 +42,27 @@ int main (int argc, char **argv) {
    uint64_t diffBytes;
    double bw;
 
+   // Create the UDP client
    rogue::protocols::udp::ClientPtr udp  = rogue::protocols::udp::Client::create("192.168.2.187",8194,9000);
    udp->setRxSize(9000*36); // Make enough room for 36 outstanding buffers
 
+   // RSSI and packetizer
    rogue::protocols::rssi::ClientPtr rssi = rogue::protocols::rssi::Client::create(9000);
    rogue::protocols::packetizer::CorePtr pack = rogue::protocols::packetizer::Core::create(9000);
 
+   // Connect the RSSI engine to the UDP client
    udp->setSlave(rssi->transport());
    rssi->transport()->setSlave(udp);
 
+   // Connect the RSSI engine to the packetizer
    rssi->application()->setSlave(pack->transport());
    pack->transport()->setSlave(rssi->application());
 
+   // Create a test sink and connect to channel 1 of the packetizer
    boost::shared_ptr<TestSink> sink = boost::make_shared<TestSink>();
    pack->application(1)->setSlave(sink);
 
+   // Loop forever showing counts
    lastBytes = 0;
    gettimeofday(&last,NULL);
 

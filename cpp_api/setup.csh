@@ -1,4 +1,4 @@
 
 # Setup python path
-setenv PYTHONPATH ${PWD}/scripts:${PWD}/../surf/python:${PYTHONPATH}
+setenv PYTHONPATH ${PWD}/scripts:${PWD}/../expample_devices:${PYTHONPATH}
 
