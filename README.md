@@ -1,32 +1,31 @@
 # rogue-example
-Example project for rogue
 
-The rogue project can be found at:
+A repository containing example usages for rogue.
+
+The main rogue repository can be found at:
 
 https://github.com/slaclab/rogue
 
-To checkout rogue submodule:
+## example_devices sub-directory
+This sub-directory contains examples of device, variable and command creation.
 
+## cpp_api
 
-```ShellSession
-git submodule init
-git sudmodule update
-```
-See rogue/Readme files for rogue build instructions.
+Example c++ sources and python trees demonstrating the C++ API wrapper which allows 
+a rougue python tree to be integrated into a C++ software package.
 
-To build this example software you must first setup the environment. A
-template file setup_template.csh is provided as an example. To 
-use this file execute the following in your tcsh:
+## custom_python_module
 
-```ShellSession
-source setup_template.csh
-```
+Example C++ project for creating a custom rogue module which can be integrated into a pyrogue project. 
 
-If using a different shell the equivelent setup file for that shell 
-must be created.
+## rss_cpp_reciever
 
-Once the environment is setup you can build this software:
-```ShellSession
-make
-```
+An example of a pure c++ udp/rssi/packetizer receiver.
 
+## shared_mem_client
+
+Example of controlling a pyrogue tree through a shared memory interface
+
+## scripts
+
+This is a legacy sub-directory which will be emptied out as examples are moved into individual sub-directories.
