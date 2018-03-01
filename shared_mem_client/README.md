@@ -1,10 +1,6 @@
-# Rogue C++ API Examples
+# Rogue Shared Memory Example
 
-This directory contains an example of using the C++ api to access pyrogue trees from a C++ program. Both a local and remote example are included.
-
-The local example starts a tree directly, acting the the local server for the tree.
-
-The remote example connects to a remote tree using the pyro4 interface.
+This directory contains an example of using the shared memory interface to control and monitor a pyrogue tree.
 
 ## Building the examples
 
@@ -27,8 +23,6 @@ $ cmake ..
 $ make
 ````
 
-There will now be two output files in the bin directory.
-
 ### Setting up the environment
 
 To use this example you will need to add the example_devices directory to your python path. A local setup script will properly example_devices directory to your python path.
@@ -41,23 +35,17 @@ or
 $ source setup.csh
 ````
 
-### Running the examples
+### Running the example
 
-First start the local example which will create an instance of the DummyRoot python tree which is described in the scripts/testApi.py file. This program will start the tree, write and read a scratchpad register and then dump a list of variables and commands from the tree structure.
-
-````
-$ bin/api_local
-````
-
-To run the remote test you will need two windows, both with the appropriate rogue and local environment setup. In the first window you will start a python instance of the DummyTree and run it in a while loop.
+To test the shared memory interface you will need two windows, both with the appropriate rogue and local environment setup. In the first window you will start a python instance of the DummyTree and run it in a while loop.
 
 ````
-$ python3 scripts/testApi.py
+$ python3 scripts/testSmem.py
 ````
 
-In the second window you will start a C++ client which will attach to the Rogue tree and perform the same test and dump opeations.
+In the second window you will start a C++ client which will attach to shared memory interface to write and read a scratchpad register.
 
 ````
-$ bin/api_remote
+$ bin/smem_test
 ````
 
