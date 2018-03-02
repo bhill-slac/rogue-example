@@ -33,6 +33,8 @@ pyrogue.streamConnect(prbsA,fwr.getChannel(0x5))
 
 fwr.open("test.dat")
 
+print("Writing data to the file for 5 seconds, please wait")
+
 prbsA.enable(1000)
 time.sleep(5)
 prbsA.disable()
@@ -40,7 +42,7 @@ time.sleep(1)
 fwr.close()
 
 print("Generated: Count %i, Bytes %i" % (prbsA.getTxCount(),prbsA.getTxBytes()))
-print("     File: Count %i, Bytes %i" % (fwr.getBankCount(),fwr.getSize()))
+print("     File: Count %i, Bytes %i" % (fwr.getFrameCount(),fwr.getSize()))
 
 frd = rogue.utilities.fileio.StreamReader()
 
@@ -53,6 +55,6 @@ frd.open("test.dat.1")
 while (True):
 
    print("")
-   print(" Dest: Count %i, Bytes %i, Alloc %i, Errors %i" % (prbsB.getRxCount(),prbsB.getRxBytes(),prbsB.getAllocBytes(),prbsB.getRxErrors()))
+   print(" Dest: Count %i, Bytes %i, Errors %i" % (prbsB.getRxCount(),prbsB.getRxBytes(),prbsB.getRxErrors()))
    time.sleep(1)
 
