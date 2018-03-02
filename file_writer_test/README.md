@@ -2,6 +2,8 @@
 
 This directory contains a python test script which writes PRBS data to a file and then reads that data back.
 
+This example also uses the compress / uncompress modules.
+
 ## Runing the test
 
 First setup the rogue environment:

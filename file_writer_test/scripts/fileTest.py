@@ -29,7 +29,10 @@ fwr.setBufferSize(100004)
 fwr.setMaxSize(1000003)
 
 prbsA = rogue.utilities.Prbs()
-pyrogue.streamConnect(prbsA,fwr.getChannel(0x5))
+compA = rogue.utilities.StreamZip()
+
+pyrogue.streamConnect(prbsA,compA)
+pyrogue.streamConnect(compA,fwr.getChannel(0x5))
 
 fwr.open("test.dat")
 
@@ -46,8 +49,11 @@ print("     File: Count %i, Bytes %i" % (fwr.getFrameCount(),fwr.getSize()))
 
 frd = rogue.utilities.fileio.StreamReader()
 
+compB = rogue.utilities.StreamUnZip()
 prbsB = rogue.utilities.Prbs()
-pyrogue.streamConnect(frd,prbsB)
+
+pyrogue.streamConnect(frd,compB)
+pyrogue.streamConnect(compB,prbsB)
 
 frd.open("test.dat.1")
 #frd.open("test.dat")

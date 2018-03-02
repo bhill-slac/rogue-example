@@ -20,6 +20,10 @@ a rougue python tree to be integrated into a C++ software package.
 
 Example C++ project for creating a custom rogue module which can be integrated into a pyrogue project. 
 
+### file_writer_test
+
+Example test script for reading and write files with compression.
+
 ### rss_cpp_reciever
 
 An example of a pure c++ udp/rssi/packetizer receiver.
