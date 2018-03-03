@@ -20,35 +20,37 @@ import pyrogue
 import time
 
 # Server chain
-serv = rogue.protocols.udp.Server(8192,1024);
+serv = rogue.protocols.udp.Server(0,1024);
 port = serv.getPort()
 print("Port is {}".format(port))
 
-sRssi = rogue.protocols.rssi.Server(1024)
+#sRssi = rogue.protocols.rssi.Server(1024)
 #pyrogue.streamConnectBiDir(serv,sRssi.transport())
 
 #sPack = rogue.protocols.packetizer.Core(1024)
 #pyrogue.streamConnectBiDir(sRssi.application(),sPack.transport())
 
 prbsRx = rogue.utilities.Prbs()
+pyrogue.streamConnect(serv,prbsRx)
 #pyrogue.streamConnect(sPack.application(0),prbsRx)
 
 # Client chain
-#client = rogue.protocols.udp.Client("localhost",port,1024);
+client = rogue.protocols.udp.Client("localhost",port,1024);
 
-cRssi = rogue.protocols.rssi.Client(1024)
+#cRssi = rogue.protocols.rssi.Client(1024)
 #pyrogue.streamConnectBiDir(client,sRssi.transport())
 
 #cPack = rogue.protocols.packetizer.Core(1024)
 #pyrogue.streamConnectBiDir(cRssi.application(),cPack.transport())
 
 prbsTx = rogue.utilities.Prbs()
+pyrogue.streamConnect(prbsTx,client)
 #pyrogue.streamConnect(prbsTx,cPack.application(0))
 
-pyrogue.streamConnectBiDir(sRssi.transport(),cRssi.transport())
+#pyrogue.streamConnectBiDir(sRssi.transport(),cRssi.transport())
 
 # Enable 
-#prbsTx.enable(1000)
+prbsTx.enable(1000)
 
 while (True):
 
