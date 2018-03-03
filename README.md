@@ -32,6 +32,10 @@ An example of a pure c++ udp/rssi/packetizer receiver.
 
 Example of controlling a pyrogue tree through a shared memory interface
 
+### upd_packetizer_test
+
+Example test script for sending multiple stream over UDP using the packetizer, RSSI and UDP modules. 
+
 ### scripts
 
 This is a legacy sub-directory which will be emptied out as examples are moved into individual sub-directories.
