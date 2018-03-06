@@ -22,6 +22,6 @@ $ source /path/to/rogue/setup_rogue.csh
 Once the environment is setup you can run the test
 
 ````
-$ python3 scripts/udpDataTest.py
+$ python3 scripts/udpPacketizerV1.py
 ````
 
