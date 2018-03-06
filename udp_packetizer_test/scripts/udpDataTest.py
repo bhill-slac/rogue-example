@@ -19,6 +19,7 @@ import rogue.interfaces.stream
 import pyrogue
 import time
 
+#rogue.Logging.setLevel(rogue.Logging.Info)
 rogue.Logging.setLevel(rogue.Logging.Warning)
 
 # Server chain
