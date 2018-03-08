@@ -21,7 +21,7 @@ import surf.axi
 import time
 import rogue
 
-rogue.Logging.setLevel(rogue.Logging.Debug)
+#rogue.Logging.setLevel(rogue.Logging.Debug)
 
 class EpicsStream(rogue.interfaces.stream.Slave,rogue.interfaces.stream.Master):
     def __init__(self):
@@ -37,8 +37,8 @@ class EpicsStream(rogue.interfaces.stream.Slave,rogue.interfaces.stream.Master):
         frame.write(ba,0)
         self._sendFrame(frame)
 
-def printVal(value,disp):
-    print(f"Var set value {value}, disp {disp}")
+def printVal(path,value,disp):
+    print(f"Var set {path}, value {value}, disp {disp}")
 
 class DummyTree(pyrogue.Root):
 
@@ -50,12 +50,17 @@ class DummyTree(pyrogue.Root):
         sim = pyrogue.interfaces.simulation.MemEmulate()
         
         # Add Device
-        #self.add(surf.axi.AxiVersion(memBase=sim,offset=0x0))
+        self.add(surf.axi.AxiVersion(memBase=sim,offset=0x0))
+        self.AxiVersion.ScratchPad.addListener(printVal)
 
         self.epicsStream = EpicsStream()
 
         v = (pyrogue.LocalVariable(name='listVar',value=[0,1,2,3,4,5,6,7,8,9,10]))
-        #v.addListener(printVal)
+        v.addListener(printVal)
+        self.add(v)
+
+        v = (pyrogue.LocalVariable(name='strVar',value="test"))
+        v.addListener(printVal)
         self.add(v)
 
         # Start the tree
@@ -78,5 +83,8 @@ if __name__ == "__main__":
         for i in range(4,16,4):
             print("Sending {}".format(i))
             dummyTree.epicsStream.genFrame(i)
+            lst = [i for i in range(i)]
+            print("Setting: {}".format(lst))
+            dummyTree.listVar.set(lst)
             time.sleep(1)
 
