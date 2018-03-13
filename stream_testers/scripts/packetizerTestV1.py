@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 #-----------------------------------------------------------------------------
-# Title      : Data over udp/packetizer/rssi test script
+# Title      : Packetizer to packetizer test
 #-----------------------------------------------------------------------------
-# File       : udpPacketizerV1.py
+# File       : packetizerTestV1.py
 # Created    : 2018-03-02
 #-----------------------------------------------------------------------------
 # This file is part of the rogue_example software. It is subject to 
