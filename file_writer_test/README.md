@@ -30,3 +30,10 @@ fwr.setMaxSize(1000003)
 ````
 
 If this value is non zero multiple data files will be created.
+
+A version of the script which uses compression is also available.
+
+````
+$ python3 scripts/fileTest.py
+````
+
