@@ -21,7 +21,7 @@ import time
 
 #rogue.Logging.setLevel(rogue.Logging.Info)
 #rogue.Logging.setLevel(rogue.Logging.Warning)
-rogue.Logging.setLevel(rogue.Logging.Debug)
+#rogue.Logging.setLevel(rogue.Logging.Debug)
 
 sRssi = rogue.protocols.rssi.Server(1000)
 
@@ -42,7 +42,7 @@ pyrogue.streamConnect(prbsTx,cPack.application(0))
 pyrogue.streamConnectBiDir(cRssi.transport(),sRssi.transport())
 
 # Enable 
-#prbsTx.enable(200)
+prbsTx.enable(200000)
 
 while (True):
    print("")
