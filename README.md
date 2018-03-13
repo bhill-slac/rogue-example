@@ -33,13 +33,13 @@ This sub-directory contains examples of device, variable and command creation.
 
 Example test script for reading and write files with and without compression.
 
-### prbs_test
-
-PRBS RX/TX scripts with various levels of packetizer and RSSI support with UDP tests as well.
-
 ### shared_mem_client
 
 Example of controlling a pyrogue tree through a shared memory interface
+
+### stream_testers
+
+PRBS RX/TX scripts with various levels of packetizer and RSSI support with UDP tests as well.
 
 ### scripts
 
