@@ -58,9 +58,13 @@ pyrogue.streamConnect(compB,prbsB)
 frd.open("test.dat.1")
 #frd.open("test.dat")
 
-while (True):
+try:
+    while (True):
 
-   print("")
-   print(" Dest: Count %i, Bytes %i, Errors %i" % (prbsB.getRxCount(),prbsB.getRxBytes(),prbsB.getRxErrors()))
-   time.sleep(1)
+       print("")
+       print(" Dest: Count %i, Bytes %i, Errors %i" % (prbsB.getRxCount(),prbsB.getRxBytes(),prbsB.getRxErrors()))
+       time.sleep(1)
+
+except KeyboardInterrupt:
+    pass
 

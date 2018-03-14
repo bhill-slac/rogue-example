@@ -22,22 +22,26 @@ import time
 #rogue.Logging.setLevel(rogue.Logging.Info)
 rogue.Logging.setLevel(rogue.Logging.Warning)
 
-sPack = rogue.protocols.packetizer.CoreV2()
+sPack = rogue.protocols.packetizer.CoreV2(True,True)
 prbsRx = rogue.utilities.Prbs()
 pyrogue.streamConnect(sPack.application(0),prbsRx)
 
-cPack = rogue.protocols.packetizer.CoreV2()
+cPack = rogue.protocols.packetizer.CoreV2(True,True)
 prbsTx = rogue.utilities.Prbs()
 pyrogue.streamConnect(prbsTx,cPack.application(0))
 
 pyrogue.streamConnectBiDir(cPack.transport(),sPack.transport())
 
 # Enable 
-prbsTx.enable(20000)
+prbsTx.enable(20004)
 
-while (True):
-   print("")
-   print(" Source: Count {}, Bytes {}".format(prbsTx.getTxCount(),prbsTx.getTxBytes()))
-   print(" Dest:   Count {}, Bytes {}, Errors {}".format(prbsRx.getRxCount(),prbsRx.getRxBytes(),prbsRx.getRxErrors()))
-   time.sleep(1)
+try:
+    while (True):
+       print("")
+       print(" Source: Count {}, Bytes {}".format(prbsTx.getTxCount(),prbsTx.getTxBytes()))
+       print(" Dest:   Count {}, Bytes {}, Errors {}".format(prbsRx.getRxCount(),prbsRx.getRxBytes(),prbsRx.getRxErrors()))
+       time.sleep(1)
+
+except KeyboardInterrupt:
+    pass
 

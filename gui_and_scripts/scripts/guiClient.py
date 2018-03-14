@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
 #-----------------------------------------------------------------------------
-# Title      : Script Client
+# Title      : GUI Client
 #-----------------------------------------------------------------------------
 # File       : guiClient.py
-# Author     : Ryan Herbst, rherbst@slac.stanford.edu
 # Created    : 2016-09-29
-# Last update: 2016-09-29
 #-----------------------------------------------------------------------------
 # Description:
-# Generic Script client for rogue
+# Generic GUI client for rogue
 #-----------------------------------------------------------------------------
 # This file is part of the rogue_example software. It is subject to 
 # the license terms in the LICENSE.txt file found in the top-level directory 
@@ -18,10 +16,22 @@
 # copied, modified, propagated, or distributed except according to the terms 
 # contained in the LICENSE.txt file.
 #-----------------------------------------------------------------------------
-import pyrogue 
+import pyrogue.gui
+import PyQt4.QtGui
+import getopt
+import sys
 
-#client = pyrogue.PyroClient(group='rogueTest',host='134.79.229.11',ns='134.79.229.11')
-#client = pyrogue.PyroClient(group='rogueTest',host='134.79.229.11')
-client = pyrogue.PyroClient(group='rogueTest')
-evalBoard = client.getRoot('evalBoard')
+# Set host= to the address of a network interface to secificy the network to use
+# Set ns= to the address of the nameserver(optional)
+client = pyrogue.PyroClient(group='testGroup', host=None, ns=None)
+
+# Create GUI
+appTop = PyQt4.QtGui.QApplication(sys.argv)
+guiTop = pyrogue.gui.GuiTop(group='guiGroup')
+guiTop.addTree(client.getRoot('dummyTree'))
+
+# Run gui
+appTop.exec_()
+
+client.stop()
 

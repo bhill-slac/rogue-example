@@ -20,7 +20,8 @@ import pyrogue
 import time
 
 #rogue.Logging.setLevel(rogue.Logging.Info)
-rogue.Logging.setLevel(rogue.Logging.Warning)
+#rogue.Logging.setLevel(rogue.Logging.Warning)
+#rogue.Logging.setLevel(rogue.Logging.Debug)
 
 # Server chain
 serv = rogue.protocols.udp.Server(0,False);
@@ -51,9 +52,13 @@ pyrogue.streamConnect(prbsTx,cPack.application(0))
 # Enable 
 prbsTx.enable(20000)
 
-while (True):
-   print("")
-   print(" Source: Open {}, Count {}, Bytes {}".format(cRssi.getOpen(),prbsTx.getTxCount(),prbsTx.getTxBytes()))
-   print(" Dest:   Open {}, Count {}, Bytes {}, Errors {}".format(sRssi.getOpen(),prbsRx.getRxCount(),prbsRx.getRxBytes(),prbsRx.getRxErrors()))
-   time.sleep(1)
+try:
+    while (True):
+       print("")
+       print(" Source: Open {}, Count {}, Bytes {}".format(cRssi.getOpen(),prbsTx.getTxCount(),prbsTx.getTxBytes()))
+       print(" Dest:   Open {}, Count {}, Bytes {}, Errors {}".format(sRssi.getOpen(),prbsRx.getRxCount(),prbsRx.getRxBytes(),prbsRx.getRxErrors()))
+       time.sleep(1)
+
+except KeyboardInterrupt:
+    pass
 

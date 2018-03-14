@@ -30,7 +30,10 @@ pyrogue.streamConnect(prbsTx,rx)
 # Generate Data
 prbsTx.enable(1000)
 
-while (True):
-   print(" Rx: Count {}, Bytes {}, Last {}".format(rx.getCount(), rx.getBytes(), rx.getLast()))
-   time.sleep(1)
+try:
+    while (True):
+       print(" Rx: Count {}, Bytes {}, Last {}".format(rx.getCount(), rx.getBytes(), rx.getLast()))
+       time.sleep(1)
 
+except KeyboardInterrupt:
+    pass

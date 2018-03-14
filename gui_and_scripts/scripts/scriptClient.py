@@ -2,10 +2,8 @@
 #-----------------------------------------------------------------------------
 # Title      : Script Client
 #-----------------------------------------------------------------------------
-# File       : guiClient.py
-# Author     : Ryan Herbst, rherbst@slac.stanford.edu
+# File       : scriptClient.py
 # Created    : 2016-09-29
-# Last update: 2016-09-29
 #-----------------------------------------------------------------------------
 # Description:
 # Generic Script client for rogue
@@ -18,8 +16,14 @@
 # copied, modified, propagated, or distributed except according to the terms 
 # contained in the LICENSE.txt file.
 #-----------------------------------------------------------------------------
-import Pyro4.naming
+import pyrogue 
 
-#ns = Pyro4.naming.startNSloop(host='134.79.229.11')
-ns = Pyro4.naming.startNSloop()
+# Set host= to the address of a network interface to secificy the network to use
+# Set ns= to the address of the nameserver(optional)
+client = pyrogue.PyroClient(group='testGroup', host=None, ns=None)
+dummyTree = client.getRoot('dummyTree')
 
+dummyTree.AxiVersion.ScratchPad.set(0x55)
+print(dummyTree.AxiVersion.ScratchPad.get(0x55))
+
+# Start with ipython -i scriptClient.py to interact with the tree

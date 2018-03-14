@@ -38,6 +38,10 @@ if __name__ == "__main__":
     dummyTree = DummyTree()
 
     print("Running in python main")
-    while True:
-        time.sleep(1)
+    try:
+        while True:
+            time.sleep(1)
+
+    except KeyboardInterrupt:
+        dummyTree.stop()
 

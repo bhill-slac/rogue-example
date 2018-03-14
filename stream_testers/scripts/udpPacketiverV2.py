@@ -42,7 +42,7 @@ client = rogue.protocols.udp.Client("localhost",port,False);
 cRssi = rogue.protocols.rssi.Client(client.maxPayload())
 pyrogue.streamConnectBiDir(client,cRssi.transport())
 
-cPack = rogue.protocols.packetizer.CoreV2(False,True)
+cPack = rogue.protocols.packetizer.CoreV2(True,True)
 pyrogue.streamConnectBiDir(cRssi.application(),cPack.transport())
 
 prbsTx = rogue.utilities.Prbs()
@@ -51,9 +51,13 @@ pyrogue.streamConnect(prbsTx,cPack.application(0))
 # Enable 
 prbsTx.enable(20000)
 
-while (True):
-   print("")
-   print(" Source: Open {}, Count {}, Bytes {}".format(cRssi.getOpen(),prbsTx.getTxCount(),prbsTx.getTxBytes()))
-   print(" Dest:   Open {}, Count {}, Bytes {}, Errors {}".format(sRssi.getOpen(),prbsRx.getRxCount(),prbsRx.getRxBytes(),prbsRx.getRxErrors()))
-   time.sleep(1)
+try:
+    while (True):
+       print("")
+       print(" Source: Open {}, Count {}, Bytes {}".format(cRssi.getOpen(),prbsTx.getTxCount(),prbsTx.getTxBytes()))
+       print(" Dest:   Open {}, Count {}, Bytes {}, Errors {}".format(sRssi.getOpen(),prbsRx.getRxCount(),prbsRx.getRxBytes(),prbsRx.getRxErrors()))
+       time.sleep(1)
+
+except KeyboardInterrupt:
+    pass
 

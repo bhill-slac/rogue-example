@@ -35,9 +35,13 @@ pyrogue.streamConnectBiDir(cPack.transport(),sPack.transport())
 # Enable 
 prbsTx.enable(20000)
 
-while (True):
-   print("")
-   print(" Source: Count {}, Bytes {}".format(prbsTx.getTxCount(),prbsTx.getTxBytes()))
-   print(" Dest:   Count {}, Bytes {}, Errors {}".format(prbsRx.getRxCount(),prbsRx.getRxBytes(),prbsRx.getRxErrors()))
-   time.sleep(1)
+try:
+    while (True):
+       print("")
+       print(" Source: Count {}, Bytes {}".format(prbsTx.getTxCount(),prbsTx.getTxBytes()))
+       print(" Dest:   Count {}, Bytes {}, Errors {}".format(prbsRx.getRxCount(),prbsRx.getRxBytes(),prbsRx.getRxErrors()))
+       time.sleep(1)
+
+except KeyboardInterrupt:
+    pass
 

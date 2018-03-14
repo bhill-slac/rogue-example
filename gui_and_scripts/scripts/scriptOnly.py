@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 #-----------------------------------------------------------------------------
-# Title      : Shared memory test script
+# Title      : Script only test
 #-----------------------------------------------------------------------------
-# File       : testSmem.py
+# File       : scriptOnly.py
 # Created    : 2018-02-28
 #-----------------------------------------------------------------------------
 # This file is part of the rogue_example software. It is subject to 
@@ -15,9 +15,12 @@
 #-----------------------------------------------------------------------------
 import pyrogue
 import pyrogue.interfaces.simulation
-import pyrogue.interfaces.smem
+import rogue.interfaces.stream
 import surf.axi
 import time
+import rogue
+
+#rogue.Logging.setLevel(rogue.Logging.Debug)
 
 class DummyTree(pyrogue.Root):
 
@@ -31,23 +34,13 @@ class DummyTree(pyrogue.Root):
         # Add Device
         self.add(surf.axi.AxiVersion(memBase=sim,offset=0x0))
 
-        # Enable shared memory interface
-        self.smem = pyrogue.interfaces.smem.SMemControl(group='smemTest',root=self)
+        # Start the tree with pyrogue server, internal nameserver, default interface
+        self.start(self, pyroGroup='testGroup', pyroHost=None, pyroNs=None)
 
-        # Start the tree
-        self.start()
+dummyTree = DummyTree()
 
-if __name__ == "__main__":
+dummyTree.AxiVersion.ScratchPad.set(0x55)
+print(dummyTree.AxiVersion.ScratchPad.get(0x55))
 
-    dummyTree = DummyTree()
-
-    print("Running in python main")
-    try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        dummyTree.stop()
-
-
-
+# Start with ipython -i scriptOnly.py
 

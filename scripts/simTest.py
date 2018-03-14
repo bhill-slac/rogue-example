@@ -34,14 +34,16 @@ pyrogue.streamConnect(sim,prbsB)
 prbsA.enable(1000)
 prbsB.enMessages(True)
 
-while (True):
+try:
+    while (True):
 
-   print("Generated: Count %i, Bytes %i" % (prbsA.getTxCount(),prbsA.getTxBytes()))
-   print(" Received: Count %i, Bytes %i, Errors %i" % (prbsB.getRxCount(),prbsB.getRxBytes(),prbsB.getRxErrors()))
-   print("  Gateway: TxCount %i, RxCount %i" % (sim.txCount,sim.rxCount))
-   #prbsA.genFrame(100)
-   sim.sendOpCode(0xaa)
-   sim.setData(0x7f)
-   time.sleep(1)
+       print("Generated: Count %i, Bytes %i" % (prbsA.getTxCount(),prbsA.getTxBytes()))
+       print(" Received: Count %i, Bytes %i, Errors %i" % (prbsB.getRxCount(),prbsB.getRxBytes(),prbsB.getRxErrors()))
+       print("  Gateway: TxCount %i, RxCount %i" % (sim.txCount,sim.rxCount))
+       #prbsA.genFrame(100)
+       sim.sendOpCode(0xaa)
+       sim.setData(0x7f)
+       time.sleep(1)
 
-
+except KeyboardInterrupt:
+    prbsA.disable()

@@ -42,9 +42,13 @@ pyrogue.streamConnectBiDir(cRssi.transport(),sRssi.transport())
 # Enable 
 prbsTx.enable(200000)
 
-while (True):
-   print("")
-   print(" Source: Open {}, Count {}, Bytes {}".format(cRssi.getOpen(),prbsTx.getTxCount(),prbsTx.getTxBytes()))
-   print(" Dest:   Open {}, Count {}, Bytes {}, Errors {}".format(sRssi.getOpen(),prbsRx.getRxCount(),prbsRx.getRxBytes(),prbsRx.getRxErrors()))
-   time.sleep(1)
+try:
+    while (True):
+       print("")
+       print(" Source: Open {}, Count {}, Bytes {}".format(cRssi.getOpen(),prbsTx.getTxCount(),prbsTx.getTxBytes()))
+       print(" Dest:   Open {}, Count {}, Bytes {}, Errors {}".format(sRssi.getOpen(),prbsRx.getRxCount(),prbsRx.getRxBytes(),prbsRx.getRxErrors()))
+       time.sleep(1)
+
+except KeyboardInterrupt:
+    pass
 

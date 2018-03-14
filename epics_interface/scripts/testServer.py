@@ -79,12 +79,15 @@ if __name__ == "__main__":
     dummyTree = DummyTree()
 
     print("Running in python main")
-    while True:
-        for i in range(4,16,4):
-            print("Sending {}".format(i))
-            dummyTree.epicsStream.genFrame(i)
-            lst = [i for i in range(i)]
-            print("Setting: {}".format(lst))
-            dummyTree.listVar.set(lst)
-            time.sleep(1)
+    try:
+        while True:
+            for i in range(4,16,4):
+                print("Sending {}".format(i))
+                dummyTree.epicsStream.genFrame(i)
+                lst = [i for i in range(i)]
+                print("Setting: {}".format(lst))
+                dummyTree.listVar.set(lst)
+                time.sleep(1)
+    except KeyboardInterrupt:
+        dummyTree.stop()
 
