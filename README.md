@@ -46,6 +46,3 @@ Example of controlling a pyrogue tree through a shared memory interface
 
 PRBS RX/TX scripts with various levels of packetizer and RSSI support with UDP tests as well.
 
-### scripts
-
-This is a legacy sub-directory which will be emptied out as examples are moved into individual sub-directories.
