@@ -13,13 +13,14 @@ https://github.com/slaclab/rogue
 Example c++ sources and python trees demonstrating the C++ API wrapper which allows 
 a rougue python tree to be integrated into a C++ software package.
 
+### cpp_stream_receiver
+
+An example of a pure c++ udp/rssi/packetizer receiver as well as some python stream receiver examples.
+
 ### custom_python_module
 
 Example C++ project for creating a custom rogue module which can be integrated into a pyrogue project. 
-
-### custom_stream_receivers
-
-An example of a pure c++ udp/rssi/packetizer receiver as well as some python stream receiver examples.
+Both stream and memory examples are provided.
 
 ### epics_interface
 
@@ -32,6 +33,10 @@ This sub-directory contains examples of device, variable and command creation.
 ### file_writer_test
 
 Example test script for reading and write files with and without compression.
+
+### gui_and_scripts
+
+Examples for using local and remote GUIs as well as local and remote scripting
 
 ### shared_mem_client
 
