@@ -23,9 +23,12 @@ import time
 prbsA = rogue.utilities.Prbs()
 prbsB = rogue.utilities.Prbs()
 
+prbsA.setWidth(128)
+prbsB.setWidth(128)
+
 pyrogue.streamConnect(prbsA,prbsB)
 
-prbsA.enable(1000)
+prbsA.enable(1024)
 
 try:
     while (True):
