@@ -21,15 +21,15 @@ import time
 
 #rogue.Logging.setLevel(rogue.Logging.Debug)
 
-sRssi = rogue.protocols.rssi.Server(1000)
+sRssi = rogue.protocols.rssi.Server(1400)
 
-sPack = rogue.protocols.packetizer.CoreV2(True,True)
+sPack = rogue.protocols.packetizer.CoreV2(False,True)
 pyrogue.streamConnectBiDir(sRssi.application(),sPack.transport())
 
 prbsRx = rogue.utilities.Prbs()
 pyrogue.streamConnect(sPack.application(0),prbsRx)
 
-cRssi = rogue.protocols.rssi.Client(1000)
+cRssi = rogue.protocols.rssi.Client(1400)
 
 cPack = rogue.protocols.packetizer.CoreV2(True,True)
 pyrogue.streamConnectBiDir(cRssi.application(),cPack.transport())

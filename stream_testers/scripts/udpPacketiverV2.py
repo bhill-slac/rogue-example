@@ -20,7 +20,8 @@ import pyrogue
 import time
 
 #rogue.Logging.setLevel(rogue.Logging.Info)
-rogue.Logging.setLevel(rogue.Logging.Warning)
+#rogue.Logging.setLevel(rogue.Logging.Warning)
+#rogue.Logging.setLevel(rogue.Logging.Debug)
 
 # Server chain
 serv = rogue.protocols.udp.Server(0,False);
