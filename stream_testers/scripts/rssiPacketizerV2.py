@@ -23,7 +23,7 @@ import time
 
 sRssi = rogue.protocols.rssi.Server(1000)
 
-sPack = rogue.protocols.packetizer.Core()
+sPack = rogue.protocols.packetizer.CoreV2(True,True)
 pyrogue.streamConnectBiDir(sRssi.application(),sPack.transport())
 
 prbsRx = rogue.utilities.Prbs()
@@ -31,7 +31,7 @@ pyrogue.streamConnect(sPack.application(0),prbsRx)
 
 cRssi = rogue.protocols.rssi.Client(1000)
 
-cPack = rogue.protocols.packetizer.Core()
+cPack = rogue.protocols.packetizer.CoreV2(True,True)
 pyrogue.streamConnectBiDir(cRssi.application(),cPack.transport())
 
 prbsTx = rogue.utilities.Prbs()
@@ -40,7 +40,7 @@ pyrogue.streamConnect(prbsTx,cPack.application(0))
 pyrogue.streamConnectBiDir(cRssi.transport(),sRssi.transport())
 
 # Enable 
-prbsTx.enable(200000)
+prbsTx.enable(20000)
 
 try:
     while (True):
