@@ -20,7 +20,6 @@ import rogue.interfaces.stream
 import surf.axi
 import time
 import rogue
-import PyQt4.QtGui
 import sys
 
 #rogue.Logging.setLevel(rogue.Logging.Debug)
@@ -47,7 +46,7 @@ if __name__ == "__main__":
     dummyTree = DummyTree()
 
     # Create GUI
-    appTop = PyQt4.QtGui.QApplication(sys.argv)
+    appTop = purogue.gui.application(sys.argv)
     guiTop = pyrogue.gui.GuiTop(group='guiGroup')
     guiTop.addTree(dummyTree)
 

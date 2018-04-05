@@ -17,7 +17,6 @@
 # contained in the LICENSE.txt file.
 #-----------------------------------------------------------------------------
 import pyrogue.gui
-import PyQt4.QtGui
 import getopt
 import sys
 
@@ -26,7 +25,7 @@ import sys
 client = pyrogue.PyroClient(group='testGroup', host=None, ns=None)
 
 # Create GUI
-appTop = PyQt4.QtGui.QApplication(sys.argv)
+appTop = purogue.gui.application(sys.argv)
 guiTop = pyrogue.gui.GuiTop(group='guiGroup')
 guiTop.addTree(client.getRoot('dummyTree'))
 

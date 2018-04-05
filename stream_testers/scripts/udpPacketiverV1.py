@@ -20,7 +20,7 @@ import pyrogue
 import time
 
 #rogue.Logging.setLevel(rogue.Logging.Info)
-#rogue.Logging.setLevel(rogue.Logging.Warning)
+rogue.Logging.setLevel(rogue.Logging.Warning)
 #rogue.Logging.setLevel(rogue.Logging.Debug)
 
 # Server chain
@@ -55,8 +55,8 @@ prbsTx.enable(20000)
 try:
     while (True):
        print("")
-       print(" Source: Open {}, Count {}, Bytes {}".format(cRssi.getOpen(),prbsTx.getTxCount(),prbsTx.getTxBytes()))
-       print(" Dest:   Open {}, Count {}, Bytes {}, Errors {}".format(sRssi.getOpen(),prbsRx.getRxCount(),prbsRx.getRxBytes(),prbsRx.getRxErrors()))
+       print(" Source: Open {}, Count {}, Bytes {} Drops {} Retrans {}".format(cRssi.getOpen(),prbsTx.getTxCount(),prbsTx.getTxBytes(),cRssi.getDropCount(),cRssi.getRetranCount()))
+       print(" Dest:   Open {}, Count {}, Bytes {} Drops {} Retrans {} Errors {}".format(sRssi.getOpen(),prbsRx.getRxCount(),prbsRx.getRxBytes(),sRssi.getDropCount(),sRssi.getRetranCount(), prbsRx.getRxErrors()))
        time.sleep(1)
 
 except KeyboardInterrupt:
