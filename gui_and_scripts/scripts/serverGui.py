@@ -46,7 +46,7 @@ if __name__ == "__main__":
     dummyTree = DummyTree()
 
     # Create GUI
-    appTop = purogue.gui.application(sys.argv)
+    appTop = pyrogue.gui.application(sys.argv)
     guiTop = pyrogue.gui.GuiTop(group='guiGroup')
     guiTop.addTree(dummyTree)
 
