@@ -70,6 +70,7 @@ class DummyTree(pyrogue.Root):
         es = self.epics.createSlave('slave',1000,'UInt32')
         em = self.epics.createMaster('mast',1000,'UInt32')
         self.epics.start()
+        self.epics.dump()
 
         pyrogue.streamConnect(em, self.epicsStream)
         pyrogue.streamConnect(self.epicsStream, es)
