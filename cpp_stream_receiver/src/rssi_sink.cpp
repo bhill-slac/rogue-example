@@ -1,8 +1,9 @@
+#include <rogue/protocols/udp/Core.h>
 #include <rogue/protocols/udp/Client.h>
 #include <rogue/protocols/rssi/Client.h>
 #include <rogue/protocols/rssi/Transport.h>
 #include <rogue/protocols/rssi/Application.h>
-#include <rogue/protocols/packetizer/Core.h>
+#include <rogue/protocols/packetizer/CoreV2.h>
 #include <rogue/protocols/packetizer/Transport.h>
 #include <rogue/protocols/packetizer/Application.h>
 #include <rogue/interfaces/stream/Frame.h>
@@ -15,18 +16,15 @@ class TestSink : public rogue::interfaces::stream::Slave {
       uint32_t rxCount;
       uint64_t rxBytes;
       uint32_t rxLast;
-      uint32_t rxLastB;
 
       TestSink() {
          rxCount = 0;
          rxBytes = 0;
          rxLast  = 0;
-         rxLastB = 0;
       }
 
       void acceptFrame ( boost::shared_ptr<rogue::interfaces::stream::Frame> frame ) {
          rxLast   = frame->getPayload();
-         rxLastB  = frame->getCount();
          rxBytes += rxLast;
          rxCount++;
       }
@@ -42,13 +40,15 @@ int main (int argc, char **argv) {
    uint64_t diffBytes;
    double bw;
 
-   // Create the UDP client
-   rogue::protocols::udp::ClientPtr udp  = rogue::protocols::udp::Client::create("192.168.2.187",8194,9000);
+   // Create the UDP client, jumbo = true
+   rogue::protocols::udp::ClientPtr udp  = rogue::protocols::udp::Client::create("192.168.2.187",8194,true);
    udp->setRxSize(9000*36); // Make enough room for 36 outstanding buffers
 
-   // RSSI and packetizer
-   rogue::protocols::rssi::ClientPtr rssi = rogue::protocols::rssi::Client::create(9000);
-   rogue::protocols::packetizer::CorePtr pack = rogue::protocols::packetizer::Core::create(9000);
+   // RSSI
+   rogue::protocols::rssi::ClientPtr rssi = rogue::protocols::rssi::Client::create(udp->maxPayload());
+
+   // Packetizer, ibCrc = false, obCrc = true
+   rogue::protocols::packetizer::CoreV2Ptr pack = rogue::protocols::packetizer::CoreV2::create(false,true);
 
    // Connect the RSSI engine to the UDP client
    udp->setSlave(rssi->transport());
