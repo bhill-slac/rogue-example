@@ -27,6 +27,13 @@ class TestSink : public rogue::interfaces::stream::Slave {
          rxLast   = frame->getPayload();
          rxBytes += rxLast;
          rxCount++;
+
+         // iterator to start of buffer
+         rogue::interfaces::stream::Buffer::iterator beg = (*it)->begin();
+         rogue::interfaces::stream::Buffer::iterator end = (*it)->endPayload();
+
+         // Copy to buffer
+         //std::copy(beg,end,dest);
       }
 };
 
@@ -42,7 +49,7 @@ int main (int argc, char **argv) {
 
    // Create the UDP client, jumbo = true
    rogue::protocols::udp::ClientPtr udp  = rogue::protocols::udp::Client::create("192.168.2.187",8194,true);
-   udp->setRxSize(9000*36); // Make enough room for 36 outstanding buffers
+   udp->setRxBufferCount(64); // Make enough room for 64 outstanding buffers
 
    // RSSI
    rogue::protocols::rssi::ClientPtr rssi = rogue::protocols::rssi::Client::create(udp->maxPayload());
