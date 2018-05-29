@@ -27,7 +27,7 @@ client = pyrogue.PyroClient(group='testGroup', host=None, ns=None)
 # Create GUI
 appTop = purogue.gui.application(sys.argv)
 guiTop = pyrogue.gui.GuiTop(group='guiGroup')
-guiTop.addTree(client.getRoot('dummyTree'))
+guiTop.addTree(client.getRoot(name='dummyTree'))
 
 # Run gui
 appTop.exec_()
