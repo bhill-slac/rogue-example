@@ -22,10 +22,10 @@ import sys
 
 # Set host= to the address of a network interface to secificy the network to use
 # Set ns= to the address of the nameserver(optional)
-client = pyrogue.PyroClient(group='testGroup', host=None, ns=None)
+client = pyrogue.PyroClient(group='testGroup', localAddr=None, nsAddr=None)
 
 # Create GUI
-appTop = purogue.gui.application(sys.argv)
+appTop = pyrogue.gui.application(sys.argv)
 guiTop = pyrogue.gui.GuiTop(group='guiGroup')
 guiTop.addTree(client.getRoot(name='dummyTree'))
 

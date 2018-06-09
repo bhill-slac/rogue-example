@@ -21,6 +21,8 @@ import time
 
 #rogue.Logging.setLevel(rogue.Logging.Debug)
 
+rogue.Logging.setFilter("pyrogue.rssi.controller",rogue.Logging.Debug)
+
 sRssi = rogue.protocols.rssi.Server(1400)
 
 sPack = rogue.protocols.packetizer.CoreV2(False,True)
@@ -37,6 +39,7 @@ pyrogue.streamConnectBiDir(cRssi.application(),cPack.transport())
 prbsTx = rogue.utilities.Prbs()
 pyrogue.streamConnect(prbsTx,cPack.application(0))
 
+# This does not work! Need a buffer copy here!
 pyrogue.streamConnectBiDir(cRssi.transport(),sRssi.transport())
 
 # Enable 

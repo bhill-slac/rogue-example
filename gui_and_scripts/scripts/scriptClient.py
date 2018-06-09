@@ -20,7 +20,7 @@ import pyrogue
 
 # Set host= to the address of a network interface to secificy the network to use
 # Set ns= to the address of the nameserver(optional)
-client = pyrogue.PyroClient(group='testGroup', host=None, ns=None)
+client = pyrogue.PyroClient(group='testGroup', localAddr=None, nsAddr=None)
 dummyTree = client.getRoot('dummyTree')
 
 dummyTree.AxiVersion.ScratchPad.set(0x55)

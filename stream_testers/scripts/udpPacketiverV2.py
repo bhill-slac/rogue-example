@@ -19,7 +19,7 @@ import rogue.interfaces.stream
 import pyrogue
 import time
 
-rogue.Logging.setLevel(rogue.Logging.Info)
+#rogue.Logging.setLevel(rogue.Logging.Info)
 #rogue.Logging.setLevel(rogue.Logging.Warning)
 #rogue.Logging.setLevel(rogue.Logging.Debug)
 
@@ -52,12 +52,22 @@ pyrogue.streamConnect(prbsTx,cPack.application(0))
 # Enable 
 prbsTx.enable(20000)
 
+lastTx = 0
+lastRx = 0
+
 try:
     while (True):
-       print("")
-       print(" Source: Open {}, Count {}, Bytes {} Busy {} Drops {} Retrans {}".format(cRssi.getOpen(),prbsTx.getTxCount(),prbsTx.getTxBytes(),cRssi.getBusy(), cRssi.getDropCount(),cRssi.getRetranCount()))
-       print(" Dest:   Open {}, Count {}, Bytes {} Busy {} Drops {} Retrans {} Errors {}".format(sRssi.getOpen(),prbsRx.getRxCount(),prbsRx.getRxBytes(),sRssi.getBusy(), sRssi.getDropCount(),sRssi.getRetranCount(), prbsRx.getRxErrors()))
-       time.sleep(1)
+        
+        bwTx = (float(prbsTx.getTxBytes()) - float(lastTx)) / 1.e9
+        bwRx = (float(prbsRx.getRxBytes()) - float(lastRx)) / 1.e9
+
+        lastTx = prbsTx.getTxBytes()
+        lastRx = prbsRx.getRxBytes()
+
+        print("")
+        print(" Source: Open {}, Count {}, Bytes {}, BW {} Busy {} Drops {} Retrans {}".format(cRssi.getOpen(),prbsTx.getTxCount(),prbsTx.getTxBytes(),bwTx,cRssi.getLocBusy(), cRssi.getDropCount(),cRssi.getRetranCount()))
+        print(" Dest:   Open {}, Count {}, Bytes {}, BW {} Busy {} Drops {} Retrans {} Errors {}".format(sRssi.getOpen(),prbsRx.getRxCount(),prbsRx.getRxBytes(),bwRx,sRssi.getLocBusy(), sRssi.getDropCount(),sRssi.getRetranCount(), prbsRx.getRxErrors()))
+        time.sleep(1)
 
 except KeyboardInterrupt:
     pass
