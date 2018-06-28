@@ -24,8 +24,9 @@ class TestSink : public rogue::interfaces::stream::Slave {
       }
 
       void acceptFrame ( boost::shared_ptr<rogue::interfaces::stream::Frame> frame ) {
-         rxLast   = frame->getPayload();
-         rxBytes += rxLast;
+         uint32_t nbytes = frame->getPayload();
+         rxLast   = nbytes;
+         rxBytes += nbytes;
          rxCount++;
 
          // Iterators to start and end of frame

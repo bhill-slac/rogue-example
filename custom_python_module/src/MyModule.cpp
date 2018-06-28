@@ -34,8 +34,9 @@ class TestSink : public rogue::interfaces::stream::Slave {
       uint32_t getLast()  { return rxLast;  } // Last frame size
 
       void acceptFrame ( ris::FramePtr frame ) {
-         rxLast = frame->getPayload();
-         rxBytes += rxLast;
+         uint32_t nbytes = frame->getPayload();
+         rxLast   = nbytes;
+         rxBytes += nbytes;
          rxCount++;
 
          // Iterators to start and end of frame
