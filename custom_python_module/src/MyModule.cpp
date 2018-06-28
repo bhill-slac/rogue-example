@@ -29,16 +29,42 @@ class TestSink : public rogue::interfaces::stream::Slave {
 
       TestSink() { rxCount = 0; rxBytes = 0; rxLast = 0;}
 
-      uint32_t getCount() { return rxCount; }
-      uint32_t getBytes() { return rxBytes; }
-      uint32_t getLast()  { return rxLast;  }
+      uint32_t getCount() { return rxCount; } // Total frames
+      uint32_t getBytes() { return rxBytes; } // Total Bytes
+      uint32_t getLast()  { return rxLast;  } // Last frame size
 
       void acceptFrame ( ris::FramePtr frame ) {
          rxLast = frame->getPayload();
          rxBytes += rxLast;
          rxCount++;
+
+         // Iterators to start and end of frame
+         rogue::interfaces::stream::Frame::iterator iter = frame->beginRead();
+         rogue::interfaces::stream::Frame::iterator  end = frame->endRead();
+
+         // Example destination for data copy
+         uint8_t *buff = (uint8_t *)malloc (nbytes);
+         uint8_t  *dst = buff;
+
+         //Iterate through contigous buffers
+         while ( iter != end ) {
+
+            //  Get contigous size
+            auto size = iter.remBuffer ();
+
+            // Get the data pointer from current position
+            auto *src = iter.ptr ();
+
+            // Copy some data
+            memcpy(dst, src, size);
+
+            // Update destination pointer and source iterator
+            dst  += size;
+            iter += size;
+         }
       }
 
+      // Expose methods to python
       static void setup_python() {
          bp::class_<TestSink, boost::shared_ptr<TestSink>, bp::bases<ris::Slave>, boost::noncopyable >("TestSink",bp::init<>())
             .def("getCount", &TestSink::getCount)

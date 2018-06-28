@@ -18,9 +18,9 @@ class TestSink : public rogue::interfaces::stream::Slave {
       uint32_t rxLast;
 
       TestSink() {
-         rxCount = 0;
-         rxBytes = 0;
-         rxLast  = 0;
+         rxCount = 0; // Total frames
+         rxBytes = 0; // Total bytes
+         rxLast  = 0; // Last frame size
       }
 
       void acceptFrame ( boost::shared_ptr<rogue::interfaces::stream::Frame> frame ) {
@@ -28,12 +28,30 @@ class TestSink : public rogue::interfaces::stream::Slave {
          rxBytes += rxLast;
          rxCount++;
 
-         // iterator to start of buffer
-         rogue::interfaces::stream::Buffer::iterator beg = (*it)->begin();
-         rogue::interfaces::stream::Buffer::iterator end = (*it)->endPayload();
+         // Iterators to start and end of frame
+         rogue::interfaces::stream::Frame::iterator iter = frame->beginRead();
+         rogue::interfaces::stream::Frame::iterator  end = frame->endRead();
 
-         // Copy to buffer
-         //std::copy(beg,end,dest);
+         // Example destination for data copy
+         uint8_t *buff = (uint8_t *)malloc (nbytes);
+         uint8_t  *dst = buff;
+
+         //Iterate through contigous buffers
+         while ( iter != end ) {
+
+            //  Get contigous size
+            auto size = iter.remBuffer ();
+
+            // Get the data pointer from current position
+            auto *src = iter.ptr ();
+
+            // Copy some data
+            memcpy(dst, src, size);
+
+            // Update destination pointer and source iterator
+            dst  += size;
+            iter += size;
+         }
       }
 };
 
