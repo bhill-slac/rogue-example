@@ -7,6 +7,8 @@
 #include <rogue/protocols/packetizer/Transport.h>
 #include <rogue/protocols/packetizer/Application.h>
 #include <rogue/interfaces/stream/Frame.h>
+#include <rogue/interfaces/stream/FrameIterator.h>
+#include <rogue/interfaces/stream/Buffer.h>
 
 //! Receive slave data, count frames and total bytes for example purposes.
 class TestSink : public rogue::interfaces::stream::Slave {

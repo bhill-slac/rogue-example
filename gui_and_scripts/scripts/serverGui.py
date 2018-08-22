@@ -36,6 +36,9 @@ class DummyTree(pyrogue.Root):
         # Add Device
         self.add(surf.axi.AxiVersion(memBase=sim,offset=0x0))
 
+        # File writer example
+        self.add(pyrogue.DataWriter())
+
         # Start the tree with pyrogue server, internal nameserver, default interface
         # Set pyroHost to the address of a network interface to specify which nework to run on
         # set pyroNs to the address of a standalone nameserver (startPyrorNs.py)
