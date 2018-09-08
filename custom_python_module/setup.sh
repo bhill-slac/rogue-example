@@ -1,4 +1,4 @@
 
 # Setup python path
-export PYTHONPATH=${PWD}/python:${PYTHONPATH}
+export PYTHONPATH=${PWD}/lib:${PYTHONPATH}
 
