@@ -24,7 +24,7 @@ cmake_minimum_required(VERSION 3.5)
 include(InstallRequiredSystemLibraries)
 
 # Project name
-project (RssiSinK)
+project (RssiReg)
 
 # C/C++
 enable_language(CXX)
