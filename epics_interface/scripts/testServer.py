@@ -16,6 +16,7 @@
 import pyrogue
 import pyrogue.interfaces.simulation
 import pyrogue.protocols.epics
+import pyrogue.utilities.prbs
 import rogue.interfaces.stream
 import surf.axi
 import time
@@ -40,6 +41,10 @@ class EpicsStream(rogue.interfaces.stream.Slave,rogue.interfaces.stream.Master):
 def printVal(path,value,disp):
     print(f"Var set {path}, value {value}, disp {disp}")
 
+def setPad(tree):
+    for i in range(1000000):
+        tree.AxiVersion.ScratchPad.set(i)
+
 class DummyTree(pyrogue.Root):
 
     def __init__(self):
@@ -51,7 +56,7 @@ class DummyTree(pyrogue.Root):
         
         # Add Device
         self.add(surf.axi.AxiVersion(memBase=sim,offset=0x0))
-        self.AxiVersion.ScratchPad.addListener(printVal)
+        #self.AxiVersion.ScratchPad.addListener(printVal)
 
         self.epicsStream = EpicsStream()
 
@@ -63,32 +68,41 @@ class DummyTree(pyrogue.Root):
         v.addListener(printVal)
         self.add(v)
 
+        self.ptx = rogue.utilities.Prbs()
+
+        self.fifo = rogue.interfaces.stream.Fifo(0, 0x4000000)
+        pyrogue.streamConnect(self.ptx,self.fifo)
+
         # Start the tree
         self.start()
 
         self.epics = pyrogue.protocols.epics.EpicsCaServer(base='test',root=self)
-        es = self.epics.createSlave('slave',1000,'UInt32')
-        em = self.epics.createMaster('mast',1000,'UInt32')
+        self.es = self.epics.createSlave('slave',0x1000000,'UInt32')
+        #self.es = self.epics.createSlave('slave',0x1000,'UInt32')
+        self.em = self.epics.createMaster('mast',0x1000,'UInt32')
         self.epics.start()
         self.epics.dump()
 
-        pyrogue.streamConnect(em, self.epicsStream)
-        pyrogue.streamConnect(self.epicsStream, es)
+
+        pyrogue.streamConnect(self.em, self.epicsStream)
+        #pyrogue.streamConnect(self.epicsStream, self.es)
+        #pyrogue.streamConnect(self.ptx, self.es)
+        pyrogue.streamConnect(self.fifo, self.es)
 
 if __name__ == "__main__":
 
     dummyTree = DummyTree()
 
     print("Running in python main")
-    try:
-        while True:
-            for i in range(4,16,4):
-                print("Sending {}".format(i))
-                dummyTree.epicsStream.genFrame(i)
-                lst = [i for i in range(i)]
-                print("Setting: {}".format(lst))
-                dummyTree.listVar.set(lst)
-                time.sleep(1)
-    except KeyboardInterrupt:
-        dummyTree.stop()
+#    try:
+#        while True:
+#            for i in range(4,16,4):
+#                print("Sending {}".format(i))
+#                dummyTree.epicsStream.genFrame(i)
+#                lst = [i for i in range(i)]
+#                print("Setting: {}".format(lst))
+#                dummyTree.listVar.set(lst)
+#                time.sleep(1)
+#    except KeyboardInterrupt:
+#        dummyTree.stop()
 

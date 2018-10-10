@@ -76,7 +76,7 @@ int main (int argc, char **argv) {
    rogue::protocols::rssi::ClientPtr rssi = rogue::protocols::rssi::Client::create(udp->maxPayload());
 
    // Packetizer, ibCrc = false, obCrc = true
-   rogue::protocols::packetizer::CoreV2Ptr pack = rogue::protocols::packetizer::CoreV2::create(false,true);
+   rogue::protocols::packetizer::CoreV2Ptr pack = rogue::protocols::packetizer::CoreV2::create(false,true,true);
 
    // Connect the RSSI engine to the UDP client
    udp->setSlave(rssi->transport());
@@ -89,6 +89,9 @@ int main (int argc, char **argv) {
    // Create a test sink and connect to channel 1 of the packetizer
    boost::shared_ptr<TestSink> sink = boost::make_shared<TestSink>();
    pack->application(1)->setSlave(sink);
+
+   // Start the rssi link
+   rssi->start();
 
    // Loop forever showing counts
    lastBytes = 0;
