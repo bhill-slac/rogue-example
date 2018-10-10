@@ -1,6 +1,6 @@
-# Rogue C++ RSSI Data Receiver
+# Rogue C++ Register Access
 
-This directory contains an example of created a RSSI / packetizer data receiver purely in C++
+This directory contains an example of using Rogue to access registers in C++.
 
 The current example hard codes the IP address and port number within the C++ file. Edit this file to match your data generator.
 
@@ -28,9 +28,9 @@ $ make
 
 ### Running the example
 
-The executable can be found in bin/rssi_sink
+The executable can be found in bin/register_access
 
 ````
-$ bin/rssi_sink
+$ bin/register_access
 ````
 
