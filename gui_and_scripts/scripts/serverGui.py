@@ -24,6 +24,16 @@ import sys
 
 #rogue.Logging.setLevel(rogue.Logging.Debug)
 
+class TestClass(rogue.interfaces.stream.Slave):
+
+    def __init__(self):
+        rogue.interfaces.stream.Slave.__init__(self)
+
+    def _acceptFrame(self,frame):
+        p = bytearray(frame.getPayload())
+        frame.read(p,0)
+        print(p.decode('utf-8'))
+
 class DummyTree(pyrogue.Root):
 
     def __init__(self):
@@ -39,6 +49,9 @@ class DummyTree(pyrogue.Root):
         # File writer example
         self.add(pyrogue.DataWriter())
         self.add(pyrogue.RunControl())
+        
+        self.test = TestClass()
+        pyrogue.streamConnect(self,self.test)
 
         # Start the tree with pyrogue server, internal nameserver, default interface
         # Set pyroHost to the address of a network interface to specify which nework to run on
