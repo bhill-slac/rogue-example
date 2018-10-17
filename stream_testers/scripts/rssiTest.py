@@ -47,15 +47,15 @@ prbsTx = rogue.utilities.Prbs()
 prbsTx.genPayload(False)
 pyrogue.streamConnect(prbsTx,cRssi.application())
 
-serv.setRxBufferCount(sRssi.getRemMaxSegment());
-client.setRxBufferCount(cRssi.getRemMaxSegment());
+sRssi.start()
+cRssi.start()
 
 while not cRssi.getOpen():
     print("Waiting for RSSI link")
     time.sleep(1)
 
-sRssi.start()
-cRssi.start()
+serv.setRxBufferCount(sRssi.curMaxSegment());
+client.setRxBufferCount(cRssi.curMaxSegment());
 
 # Enable 
 prbsTx.enable(8000)
