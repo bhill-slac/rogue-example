@@ -6,16 +6,6 @@ The current example hard codes the IP address and port number within the C++ fil
 
 ## Building the example
 
-First setup the rogue environment:
-
-````
-$ source /path/to/rogue/setup_rogue.sh
-````
-or
-````
-$ source /path/to/rogue/setup_rogue.csh
-````
-
 The example project uses cmake which will automatically generate a
 makefile to properly link this example against rogue, boost and python3.
 

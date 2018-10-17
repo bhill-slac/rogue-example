@@ -70,7 +70,7 @@ class DummyTree(pyrogue.Root):
 
         self.ptx = rogue.utilities.Prbs()
 
-        self.fifo = rogue.interfaces.stream.Fifo(0, 0x4000000)
+        self.fifo = rogue.interfaces.stream.Fifo(0, 0x4000000, False)
         pyrogue.streamConnect(self.ptx,self.fifo)
 
         # Start the tree

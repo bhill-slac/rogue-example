@@ -54,6 +54,9 @@ while not cRssi.getOpen():
     print("Waiting for RSSI link")
     time.sleep(1)
 
+sRssi.start()
+cRssi.start()
+
 # Enable 
 prbsTx.enable(8000)
 

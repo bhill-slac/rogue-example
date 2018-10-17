@@ -1,4 +1,8 @@
 
+if ( ! $?PYTHONPATH ) then
+   setenv PYTHONPATH ""
+endif
+
 # Setup python path
-setenv PYTHONPATH ${PWD}/lib:${PYTHONPATH}
+setenv PYTHONPATH ${PWD}/python:${PYTHONPATH}
 

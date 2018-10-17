@@ -31,7 +31,7 @@ print("Port is {}".format(port))
 sRssi = rogue.protocols.rssi.Server(serv.maxPayload())
 pyrogue.streamConnectBiDir(serv,sRssi.transport())
 
-sPack = rogue.protocols.packetizer.CoreV2(False,True)
+sPack = rogue.protocols.packetizer.CoreV2(False,True,True)
 pyrogue.streamConnectBiDir(sRssi.application(),sPack.transport())
 
 prbsRx = rogue.utilities.Prbs()
@@ -43,11 +43,15 @@ client = rogue.protocols.udp.Client("localhost",port,False);
 cRssi = rogue.protocols.rssi.Client(client.maxPayload())
 pyrogue.streamConnectBiDir(client,cRssi.transport())
 
-cPack = rogue.protocols.packetizer.CoreV2(True,True)
+cPack = rogue.protocols.packetizer.CoreV2(True,True,True)
 pyrogue.streamConnectBiDir(cRssi.application(),cPack.transport())
 
 prbsTx = rogue.utilities.Prbs()
 pyrogue.streamConnect(prbsTx,cPack.application(0))
+
+sRssi.start()
+cRssi.start()
+time.sleep(1)
 
 # Enable 
 prbsTx.enable(20000)

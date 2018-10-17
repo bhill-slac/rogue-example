@@ -33,8 +33,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wno-deprecated")
 #####################################
 # Find Rogue & Support Libraries
 #####################################
-set(Rogue_DIR $ENV{ROGUE_DIR}/lib)
-find_package(Rogue REQUIRED)
+if (DEFINED ENV{ROGUE_DIR})
+   set(Rogue_DIR $ENV{ROGUE_DIR}/lib)
+else()
+   set(Rogue_DIR ${CMAKE_PREFIX_PATH}/lib)
+endif()
+find_package(Rogue)
 
 #####################################
 # Setup build
@@ -47,7 +51,7 @@ include_directories(${ROGUE_INCLUDE_DIRS})
 add_library(MyModule SHARED src/MyModule.cpp)
 
 # Set output to TOP/lib, remove lib prefix
-set_target_properties(MyModule PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
+set_target_properties(MyModule PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/python)
 set_target_properties(MyModule PROPERTIES PREFIX "")
 
 # Link to rogue core

@@ -39,6 +39,9 @@ pyrogue.streamConnect(prbsTx,cPack.application(0))
 
 pyrogue.streamConnectBiDir(cRssi.transport(),sRssi.transport())
 
+sRssi.start()
+cRssi.start()
+
 # Enable 
 prbsTx.enable(20000)
 

@@ -25,7 +25,7 @@ rogue.Logging.setFilter("pyrogue.rssi.controller",rogue.Logging.Debug)
 
 sRssi = rogue.protocols.rssi.Server(1400)
 
-sPack = rogue.protocols.packetizer.CoreV2(False,True)
+sPack = rogue.protocols.packetizer.CoreV2(False,True,True)
 pyrogue.streamConnectBiDir(sRssi.application(),sPack.transport())
 
 prbsRx = rogue.utilities.Prbs()
@@ -33,7 +33,7 @@ pyrogue.streamConnect(sPack.application(0),prbsRx)
 
 cRssi = rogue.protocols.rssi.Client(1400)
 
-cPack = rogue.protocols.packetizer.CoreV2(True,True)
+cPack = rogue.protocols.packetizer.CoreV2(True,True),True
 pyrogue.streamConnectBiDir(cRssi.application(),cPack.transport())
 
 prbsTx = rogue.utilities.Prbs()
@@ -41,6 +41,9 @@ pyrogue.streamConnect(prbsTx,cPack.application(0))
 
 # This does not work! Need a buffer copy here!
 pyrogue.streamConnectBiDir(cRssi.transport(),sRssi.transport())
+
+sRssi.start()
+cRssi.start()
 
 # Enable 
 prbsTx.enable(20000)

@@ -22,11 +22,11 @@ import time
 #rogue.Logging.setLevel(rogue.Logging.Info)
 rogue.Logging.setLevel(rogue.Logging.Warning)
 
-sPack = rogue.protocols.packetizer.CoreV2(True,True)
+sPack = rogue.protocols.packetizer.CoreV2(True,True,True)
 prbsRx = rogue.utilities.Prbs()
 pyrogue.streamConnect(sPack.application(0),prbsRx)
 
-cPack = rogue.protocols.packetizer.CoreV2(True,True)
+cPack = rogue.protocols.packetizer.CoreV2(True,True,True)
 prbsTx = rogue.utilities.Prbs()
 pyrogue.streamConnect(prbsTx,cPack.application(0))
 

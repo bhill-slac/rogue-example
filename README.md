@@ -13,6 +13,10 @@ https://github.com/slaclab/rogue
 Example c++ sources and python trees demonstrating the C++ API wrapper which allows 
 a rougue python tree to be integrated into a C++ software package.
 
+### cpp_register_access
+
+An example of a pure c++ module for accessing registers over a udp/rssi/packetizer link
+
 ### cpp_stream_receiver
 
 An example of a pure c++ udp/rssi/packetizer receiver as well as some python stream receiver examples.
@@ -41,6 +45,10 @@ Examples for using local and remote GUIs as well as local and remote scripting
 ### shared_mem_client
 
 Example of controlling a pyrogue tree through a shared memory interface
+
+### simulation
+
+Example usage of the rogue vcs simulation link.
 
 ### stream_testers
 

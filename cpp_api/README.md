@@ -8,18 +8,6 @@ The remote example connects to a remote tree using the pyro4 interface.
 
 ## Building the examples
 
-First setup the rogue environment:
-
-````
-$ source /path/to/rogue/setup_rogue.sh
-````
-
-or
-
-````
-$ source /path/to/rogue/setup_rogue.csh
-````
-
 The example project uses cmake which will automatically generate a
 makefile to properly link this example against rogue, boost and python3.
 
