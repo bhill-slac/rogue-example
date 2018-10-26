@@ -34,10 +34,6 @@ Example of setting up an epics interface with a streaming source and destination
 
 This sub-directory contains examples of device, variable and command creation.
 
-### file_writer_test
-
-Example test script for reading and write files with and without compression.
-
 ### gui_and_scripts
 
 Examples for using local and remote GUIs as well as local and remote scripting
@@ -49,8 +45,4 @@ Example of controlling a pyrogue tree through a shared memory interface
 ### simulation
 
 Example usage of the rogue vcs simulation link.
-
-### stream_testers
-
-PRBS RX/TX scripts with various levels of packetizer and RSSI support with UDP tests as well.
 
