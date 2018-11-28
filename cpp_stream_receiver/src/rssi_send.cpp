@@ -9,6 +9,7 @@
 #include <rogue/interfaces/stream/Frame.h>
 #include <rogue/interfaces/stream/FrameIterator.h>
 #include <rogue/interfaces/stream/Buffer.h>
+#include <rogue/Helpers.h>
 
 //! Receive slave data, count frames and total bytes for example purposes.
 class TestSend : public rogue::interfaces::stream::Master {
@@ -71,16 +72,14 @@ int main (int argc, char **argv) {
    rogue::protocols::packetizer::CoreV2Ptr pack = rogue::protocols::packetizer::CoreV2::create(false,true,true);
 
    // Connect the RSSI engine to the UDP client
-   udp->setSlave(rssi->transport());
-   rssi->transport()->setSlave(udp);
+   streamConnectBiDir(udp, rssi->transport());
 
    // Connect the RSSI engine to the packetizer
-   rssi->application()->setSlave(pack->transport());
-   pack->transport()->setSlave(rssi->application());
+   streamConnectBiDir(rssi->application(), pack->transport());
 
    // Create a test source and connect to channel 1 of the packetizer
    boost::shared_ptr<TestSend> send = boost::make_shared<TestSend>();
-   send->setSlave(pack->application(1));
+   streamConnect(send,pack->application(1))
 
    // Start the rssi link
    rssi->start();
