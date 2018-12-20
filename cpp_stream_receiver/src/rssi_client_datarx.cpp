@@ -70,7 +70,7 @@ int main (int argc, char **argv) {
    double bw;
 
    // Create the UDP client, jumbo = true
-   rogue::protocols::udp::ClientPtr udp  = rogue::protocols::udp::Client::create("192.168.2.187",8194,true);
+   rogue::protocols::udp::ClientPtr udp  = rogue::protocols::udp::Client::create("127.0.0.1",8194,true);
    udp->setRxBufferCount(64); // Make enough room for 64 outstanding buffers
 
    // RSSI
@@ -97,7 +97,7 @@ int main (int argc, char **argv) {
    gettimeofday(&last,NULL);
 
    while(1) {
-      sleep(10);
+      sleep(1);
       gettimeofday(&curr,NULL);
 
       timersub(&curr,&last,&diff);

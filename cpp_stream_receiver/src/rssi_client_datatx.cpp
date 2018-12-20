@@ -53,6 +53,7 @@ class TestSend : public rogue::interfaces::stream::Master {
 
 
 int main (int argc, char **argv) {
+   uint8_t data[100];
    struct timeval last;
    struct timeval curr;
    struct timeval diff;
@@ -90,7 +91,7 @@ int main (int argc, char **argv) {
 
    while(1) {
 
-      //send->myGenFrame(data,size);
+      send->myGenFrame(data,100);
       sleep(1);
       gettimeofday(&curr,NULL);
 
