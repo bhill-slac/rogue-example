@@ -6,7 +6,7 @@
 int main (int argc, char **argv) {
 
    RogueControlMem *smem;
-   char res [100];
+   char res [1024];
 
    if ( rogueSMemControlOpenAndMap(&smem,"smemTest") < 0 ) {
       printf("Failed to open shared memory\n");
