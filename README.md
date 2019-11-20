@@ -11,7 +11,7 @@ https://github.com/slaclab/rogue
 ### cpp_api
 
 Example c++ sources and python trees demonstrating the C++ API wrapper which allows 
-a rougue python tree to be integrated into a C++ software package.
+a rogue python tree to be integrated into a C++ software package.
 
 ### cpp_register_access
 
