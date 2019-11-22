@@ -28,7 +28,8 @@ project (RssiReg)
 
 # C/C++
 enable_language(CXX)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wno-deprecated")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-deprecated")
+#add_definitions(-D__STDC_FORMAT_MACROS)
 
 #####################################
 # Find Rogue & Support Libraries
@@ -39,6 +40,41 @@ else()
    set(Rogue_DIR ${CMAKE_PREFIX_PATH}/lib)
 endif()
 find_package(Rogue)
+
+#####################################
+# EPICS
+#####################################
+if(DEFINED ENV{EPICS_HOST_ARCH})
+   set(EPICSV3_ARCH      $ENV{EPICS_HOST_ARCH})
+else()
+   execute_process(COMMAND ${EPICSV3_BASE_DIR}/startup/EpicsHostArch 
+				   OUTPUT_VARIABLE EPICSV3_ARCH OUTPUT_STRIP_TRAILING_WHITESPACE)
+   string(REGEX REPLACE "\n$" "" EPICSV3_ARCH "${EPICSV3_ARCH}")
+endif()
+
+set(EPICSV3_LIB_DIR   ${EPICSV3_BASE_DIR}/lib/${EPICSV3_ARCH} )
+
+if(DEFINED ENV{EPICS_PCAS_ROOT})
+   set(EPICS_PCAS_ROOT   $ENV{EPICS_PCAS_ROOT})
+   set(EPICSV3_INCLUDES  ${EPICS_PCAS_ROOT}/include
+					     ${EPICSV3_BASE_DIR}/include
+					     ${EPICSV3_BASE_DIR}/include/compiler/gcc 
+					     ${EPICSV3_BASE_DIR}/include/os/Linux)
+
+   set(EPICSV3_LIBRARIES ${EPICS_PCAS_ROOT}/lib/$ENV{EPICS_HOST_ARCH}/libcas.so 
+					     ${EPICS_PCAS_ROOT}/lib/$ENV{EPICS_HOST_ARCH}/libgdd.so
+					     ${EPICSV3_LIB_DIR}/libca.so 
+					     ${EPICSV3_LIB_DIR}/libCom.so )
+else()
+   set(EPICSV3_INCLUDES  ${EPICSV3_BASE_DIR}/include
+					     ${EPICSV3_BASE_DIR}/include/compiler/gcc 
+					     ${EPICSV3_BASE_DIR}/include/os/Linux)
+
+   set(EPICSV3_LIBRARIES ${EPICSV3_LIB_DIR}/libcas.so 
+					     ${EPICSV3_LIB_DIR}/libca.so
+					     ${EPICSV3_LIB_DIR}/libCom.so
+					     ${EPICSV3_LIB_DIR}/libgdd.so )
+endif()
 
 #####################################
 # Setup build
